@@ -21,6 +21,7 @@ const otpCode = ref('')
 const loading = ref(false)
 const error = ref('')
 const countdown = ref(0)
+const initialOtpSent = ref(false)
 
 let countdownInterval: ReturnType<typeof setInterval> | null = null
 
@@ -53,31 +54,41 @@ const startCountdown = () => {
   }, 1000)
 }
 
-const handleRequestOtp = async () => {
-  if (!isIdentifierValid.value) return
-
+const sendOtp = async (targetIdentifier: string, targetIdentifierType: IdentifierType) => {
   loading.value = true
   error.value = ''
 
   try {
-    const cleanIdentifier = identifierType.value === 'phone'
-      ? identifier.value.replace(/\s/g, '')
-      : identifier.value
-
     await requestOtp({
-      identifier: cleanIdentifier,
-      identifierType: identifierType.value,
+      identifier: targetIdentifier,
+      identifierType: targetIdentifierType,
       purpose: props.purpose
     })
 
-    authStore.setOtpContext(cleanIdentifier, identifierType.value, props.purpose)
+    authStore.setOtpContext(targetIdentifier, targetIdentifierType, props.purpose)
     step.value = 'otp'
     startCountdown()
   } catch (err: any) {
     error.value = err.response?.data?.message || 'OTP gönderilemedi. Lütfen tekrar deneyin.'
+    // Eğer otomatik gönderim başarısız olursa identifier adımına dön
+    if (initialOtpSent.value) {
+      step.value = 'identifier'
+      identifier.value = targetIdentifier
+      identifierType.value = targetIdentifierType
+    }
   } finally {
     loading.value = false
   }
+}
+
+const handleRequestOtp = async () => {
+  if (!isIdentifierValid.value) return
+
+  const cleanIdentifier = identifierType.value === 'phone'
+    ? identifier.value.replace(/\s/g, '')
+    : identifier.value
+
+  await sendOtp(cleanIdentifier, identifierType.value)
 }
 
 const handleVerifyOtp = async () => {
@@ -105,10 +116,19 @@ const handleVerifyOtp = async () => {
 
 const handleResendOtp = async () => {
   if (countdown.value > 0) return
-  await handleRequestOtp()
+
+  if (authStore.identifier && authStore.identifierType) {
+    await sendOtp(authStore.identifier, authStore.identifierType)
+  }
 }
 
 const handleBack = () => {
+  // Eğer identifier daha önce set edilmişse (kayıt sayfasından geldiyse) iptal et
+  if (initialOtpSent.value) {
+    emit('cancel')
+    return
+  }
+
   step.value = 'identifier'
   otpCode.value = ''
   error.value = ''
@@ -116,6 +136,14 @@ const handleBack = () => {
     clearInterval(countdownInterval)
   }
 }
+
+// Component mount olduğunda, eğer authStore'da identifier varsa otomatik OTP gönder
+onMounted(async () => {
+  if (authStore.identifier && authStore.identifierType && authStore.purpose === props.purpose) {
+    initialOtpSent.value = true
+    await sendOtp(authStore.identifier, authStore.identifierType)
+  }
+})
 
 onUnmounted(() => {
   if (countdownInterval) {
@@ -252,7 +280,7 @@ onUnmounted(() => {
       </button>
 
       <button @click="handleBack" class="btn-secondary w-full">
-        Geri Dön
+        {{ initialOtpSent ? 'Geri Dön' : 'Geri Dön' }}
       </button>
     </div>
   </div>

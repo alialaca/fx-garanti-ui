@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import type { CreateWarrantyDto } from '~/types'
+import type { CreateWarrantyDto, IdentifierType } from '~/types'
 
 const router = useRouter()
 const authStore = useAuthStore()
 const warrantyStore = useWarrantyStore()
 
-const step = ref<'auth' | 'form' | 'success'>('auth')
+const step = ref<'form' | 'auth' | 'success'>('form')
 const loading = ref(false)
 const error = ref('')
+const verificationMethod = ref<IdentifierType>('phone')
 
 const form = reactive<CreateWarrantyDto>({
   serialNumber: '',
@@ -25,16 +26,6 @@ const form = reactive<CreateWarrantyDto>({
 
 const createdWarranty = ref<any>(null)
 
-const handleAuthSuccess = () => {
-  step.value = 'form'
-  // Pre-fill phone/email from auth
-  if (authStore.identifierType === 'phone') {
-    form.phone = authStore.identifier || ''
-  } else {
-    form.email = authStore.identifier || ''
-  }
-}
-
 const isFormValid = computed(() => {
   return (
     form.serialNumber.trim() &&
@@ -46,9 +37,18 @@ const isFormValid = computed(() => {
   )
 })
 
-const handleSubmit = async () => {
+const handleFormSubmit = () => {
   if (!isFormValid.value) return
+  error.value = ''
 
+  // OTP doğrulama için identifier'ı ayarla
+  const identifier = verificationMethod.value === 'phone' ? form.phone : form.email
+  authStore.setOtpContext(identifier, verificationMethod.value, 'warranty_register')
+
+  step.value = 'auth'
+}
+
+const handleAuthSuccess = async () => {
   loading.value = true
   error.value = ''
 
@@ -62,9 +62,14 @@ const handleSubmit = async () => {
     } else {
       error.value = err.response?.data?.message || 'Garanti kaydı oluşturulamadı. Lütfen tekrar deneyin.'
     }
+    step.value = 'form'
   } finally {
     loading.value = false
   }
+}
+
+const handleAuthCancel = () => {
+  step.value = 'form'
 }
 
 const formatTcKimlik = (value: string) => {
@@ -96,24 +101,24 @@ watch(() => form.phone, (val) => {
             <div class="flex items-center gap-2">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
-                :class="step === 'auth'
+                :class="step === 'form'
                   ? 'bg-primary text-white shadow-lg shadow-primary/30'
                   : 'bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'"
               >
-                <svg v-if="step !== 'auth'" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-if="step !== 'form'" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
                 <span v-else>1</span>
               </div>
-              <span class="text-sm font-medium hidden sm:inline" :class="step === 'auth' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Doğrulama</span>
+              <span class="text-sm font-medium hidden sm:inline" :class="step === 'form' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Bilgiler</span>
             </div>
 
-            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step !== 'auth' }"></div>
+            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step !== 'form' }"></div>
 
             <div class="flex items-center gap-2">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
-                :class="step === 'form'
+                :class="step === 'auth'
                   ? 'bg-primary text-white shadow-lg shadow-primary/30'
                   : step === 'success'
                     ? 'bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400'
@@ -124,7 +129,7 @@ watch(() => form.phone, (val) => {
                 </svg>
                 <span v-else>2</span>
               </div>
-              <span class="text-sm font-medium hidden sm:inline" :class="step === 'form' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Bilgiler</span>
+              <span class="text-sm font-medium hidden sm:inline" :class="step === 'auth' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Doğrulama</span>
             </div>
 
             <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step === 'success' }"></div>
@@ -146,7 +151,7 @@ watch(() => form.phone, (val) => {
           </div>
         </div>
 
-        <!-- Step 1: Auth -->
+        <!-- Steps Content -->
         <Transition
           enter-active-class="transition duration-300 ease-out"
           enter-from-class="opacity-0 translate-x-4"
@@ -156,16 +161,8 @@ watch(() => form.phone, (val) => {
           leave-to-class="opacity-0 -translate-x-4"
           mode="out-in"
         >
-          <div v-if="step === 'auth'" class="card p-8">
-            <OtpVerification
-              purpose="warranty_register"
-              @success="handleAuthSuccess"
-              @cancel="router.push('/')"
-            />
-          </div>
-
-          <!-- Step 2: Registration Form -->
-          <div v-else-if="step === 'form'" class="card p-8">
+          <!-- Step 1: Registration Form -->
+          <div v-if="step === 'form'" class="card p-8">
             <div class="text-center mb-8">
               <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
                 <svg class="w-8 h-8 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -176,7 +173,7 @@ watch(() => form.phone, (val) => {
               <p class="text-gray-500 dark:text-gray-400 mt-2">Cihaz ve kişisel bilgilerinizi girin</p>
             </div>
 
-            <form @submit.prevent="handleSubmit" class="space-y-6">
+            <form @submit.prevent="handleFormSubmit" class="space-y-6">
               <!-- Device Info -->
               <div class="space-y-4">
                 <h3 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
@@ -285,6 +282,46 @@ watch(() => form.phone, (val) => {
                 </div>
               </div>
 
+              <!-- Verification Method -->
+              <div class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
+                <h3 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
+                  <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Doğrulama Yöntemi
+                </h3>
+
+                <div class="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                  <button
+                    type="button"
+                    @click="verificationMethod = 'phone'"
+                    class="flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-all"
+                    :class="verificationMethod === 'phone'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
+                  >
+                    Telefon ile doğrula
+                  </button>
+                  <button
+                    type="button"
+                    @click="verificationMethod = 'email'"
+                    class="flex-1 py-2.5 px-4 text-sm font-medium rounded-md transition-all"
+                    :class="verificationMethod === 'email'
+                      ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'"
+                  >
+                    E-posta ile doğrula
+                  </button>
+                </div>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  Doğrulama kodu
+                  <span class="font-medium text-gray-700 dark:text-gray-300">
+                    {{ verificationMethod === 'phone' ? form.phone || 'telefon numaranıza' : form.email || 'e-posta adresinize' }}
+                  </span>
+                  gönderilecektir.
+                </p>
+              </div>
+
               <!-- Error Message -->
               <div v-if="error" class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                 <div class="flex items-start gap-3">
@@ -297,22 +334,38 @@ watch(() => form.phone, (val) => {
 
               <!-- Submit Button -->
               <div class="flex gap-4 pt-4">
-                <button type="button" @click="step = 'auth'" class="btn-secondary flex-1">
-                  Geri
-                </button>
+                <NuxtLink to="/" class="btn-secondary flex-1 text-center">
+                  İptal
+                </NuxtLink>
                 <button
                   type="submit"
-                  :disabled="!isFormValid || loading"
+                  :disabled="!isFormValid"
                   class="btn-primary flex-1"
                 >
-                  <svg v-if="loading" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span v-else>Garanti Kaydını Oluştur</span>
+                  Devam Et
                 </button>
               </div>
             </form>
+          </div>
+
+          <!-- Step 2: Auth -->
+          <div v-else-if="step === 'auth'" class="card p-8">
+            <OtpVerification
+              purpose="warranty_register"
+              @success="handleAuthSuccess"
+              @cancel="handleAuthCancel"
+            />
+
+            <!-- Loading overlay when submitting warranty -->
+            <div v-if="loading" class="absolute inset-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+              <div class="text-center">
+                <svg class="w-12 h-12 text-primary-500 animate-spin mx-auto mb-4" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-gray-600 dark:text-gray-400">Garanti kaydı oluşturuluyor...</p>
+              </div>
+            </div>
           </div>
 
           <!-- Step 3: Success -->
