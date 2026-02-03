@@ -10,7 +10,7 @@ const loading = ref(false)
 const error = ref('')
 const verificationMethod = ref<IdentifierType>('phone')
 
-const form = reactive<CreateWarrantyDto>({
+const form = reactive<Omit<CreateWarrantyDto, 'warrantyStartDate' | 'warrantyDurationMonths' | 'invoiceDate' | 'invoiceNumber'>>({
   serialNumber: '',
   deviceModel: '',
   firstName: '',
@@ -18,11 +18,12 @@ const form = reactive<CreateWarrantyDto>({
   identityNumber: '',
   email: '',
   phone: '',
-  invoiceNumber: '',
-  invoiceDate: '',
-  warrantyStartDate: new Date().toISOString().split('T')[0],
-  warrantyDurationMonths: 24
+  invoiceImageUrl: ''
 })
+
+const invoiceFile = ref<File | null>(null)
+const invoicePreview = ref<string | null>(null)
+const uploadingFile = ref(false)
 
 const createdWarranty = ref<any>(null)
 
@@ -32,10 +33,49 @@ const isFormValid = computed(() => {
     form.firstName.trim() &&
     form.lastName.trim() &&
     form.email.trim() &&
-    form.phone.trim() &&
-    form.warrantyStartDate
+    form.phone.trim()
   )
 })
+
+const handleFileSelect = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+
+  if (!file) return
+
+  // Validate file type
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+  if (!allowedTypes.includes(file.type)) {
+    error.value = 'Sadece JPG, PNG, WebP veya PDF dosyaları yüklenebilir.'
+    return
+  }
+
+  // Validate file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    error.value = 'Dosya boyutu 5MB\'dan küçük olmalıdır.'
+    return
+  }
+
+  error.value = ''
+  invoiceFile.value = file
+
+  // Create preview for images
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      invoicePreview.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+  } else {
+    invoicePreview.value = null
+  }
+}
+
+const removeFile = () => {
+  invoiceFile.value = null
+  invoicePreview.value = null
+  form.invoiceImageUrl = ''
+}
 
 const handleFormSubmit = () => {
   if (!isFormValid.value) return
@@ -53,7 +93,17 @@ const handleAuthSuccess = async () => {
   error.value = ''
 
   try {
-    const result = await warrantyStore.createWarranty(form)
+    // TODO: Upload file to server and get URL
+    // For now, we'll skip file upload and just create the warranty
+    // In production, you would upload the file first:
+    // if (invoiceFile.value) {
+    //   const formData = new FormData()
+    //   formData.append('file', invoiceFile.value)
+    //   const uploadResponse = await uploadFile(formData)
+    //   form.invoiceImageUrl = uploadResponse.url
+    // }
+
+    const result = await warrantyStore.createWarranty(form as CreateWarrantyDto)
     createdWarranty.value = result
     step.value = 'success'
   } catch (err: any) {
@@ -169,7 +219,7 @@ watch(() => form.phone, (val) => {
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h2 class="text-2xl font-display text-gray-900 dark:text-white">Garanti Bilgileri</h2>
+              <h2 class="text-2xl font-display text-gray-900 dark:text-white">Garanti Kaydı</h2>
               <p class="text-gray-500 dark:text-gray-400 mt-2">Cihaz ve kişisel bilgilerinizi girin</p>
             </div>
 
@@ -235,49 +285,71 @@ watch(() => form.phone, (val) => {
                 </div>
               </div>
 
-              <!-- Invoice Info -->
+              <!-- Invoice Upload -->
               <div class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <h3 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Fatura Bilgileri
+                  Fatura
                   <span class="text-gray-400 text-xs font-normal">(Opsiyonel)</span>
                 </h3>
 
-                <div class="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="label">Fatura Numarası</label>
-                    <input v-model="form.invoiceNumber" type="text" class="input" placeholder="INV-001" />
-                  </div>
-                  <div>
-                    <label class="label">Fatura Tarihi</label>
-                    <input v-model="form.invoiceDate" type="date" class="input" />
+                <!-- File Upload Area -->
+                <div v-if="!invoiceFile" class="relative">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,application/pdf"
+                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    @change="handleFileSelect"
+                  />
+                  <div class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center hover:border-primary-500 dark:hover:border-primary-400 transition-colors">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                      <svg class="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                      <span class="font-medium text-primary-600 dark:text-primary-400">Dosya seçin</span> veya sürükleyip bırakın
+                    </p>
+                    <p class="text-xs text-gray-500 dark:text-gray-500">
+                      JPG, PNG, WebP veya PDF (Maks. 5MB)
+                    </p>
                   </div>
                 </div>
-              </div>
 
-              <!-- Warranty Info -->
-              <div class="space-y-4 pt-4 border-t border-gray-100 dark:border-gray-800">
-                <h3 class="font-medium text-gray-900 dark:text-white flex items-center gap-2">
-                  <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  Garanti Bilgileri
-                </h3>
+                <!-- File Preview -->
+                <div v-else class="relative border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                  <div class="flex items-start gap-4">
+                    <!-- Image Preview -->
+                    <div v-if="invoicePreview" class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
+                      <img :src="invoicePreview" alt="Fatura önizleme" class="w-full h-full object-cover" />
+                    </div>
+                    <!-- PDF Icon -->
+                    <div v-else class="w-20 h-20 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                      <svg class="w-8 h-8 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                      </svg>
+                    </div>
 
-                <div class="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <label class="label">Garanti Başlangıç Tarihi <span class="text-red-500">*</span></label>
-                    <input v-model="form.warrantyStartDate" type="date" class="input" />
-                  </div>
-                  <div>
-                    <label class="label">Garanti Süresi</label>
-                    <select v-model="form.warrantyDurationMonths" class="input">
-                      <option :value="12">12 Ay</option>
-                      <option :value="24">24 Ay</option>
-                      <option :value="36">36 Ay</option>
-                    </select>
+                    <!-- File Info -->
+                    <div class="flex-1 min-w-0">
+                      <p class="font-medium text-gray-900 dark:text-white truncate">{{ invoiceFile.name }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">
+                        {{ (invoiceFile.size / 1024).toFixed(1) }} KB
+                      </p>
+                    </div>
+
+                    <!-- Remove Button -->
+                    <button
+                      type="button"
+                      @click="removeFile"
+                      class="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                    >
+                      <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -349,7 +421,7 @@ watch(() => form.phone, (val) => {
           </div>
 
           <!-- Step 2: Auth -->
-          <div v-else-if="step === 'auth'" class="card p-8">
+          <div v-else-if="step === 'auth'" class="card p-8 relative">
             <OtpVerification
               purpose="warranty_register"
               @success="handleAuthSuccess"
@@ -384,6 +456,10 @@ watch(() => form.phone, (val) => {
                 <div class="flex justify-between">
                   <span class="text-gray-500 dark:text-gray-400">Seri Numarası</span>
                   <span class="font-medium text-gray-900 dark:text-white">{{ createdWarranty.serialNumber }}</span>
+                </div>
+                <div v-if="createdWarranty.deviceModel" class="flex justify-between">
+                  <span class="text-gray-500 dark:text-gray-400">Cihaz Modeli</span>
+                  <span class="font-medium text-gray-900 dark:text-white">{{ createdWarranty.deviceModel }}</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-gray-500 dark:text-gray-400">Garanti Başlangıcı</span>
