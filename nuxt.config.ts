@@ -24,8 +24,17 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    warrantyServiceUrl: process.env.WARRANTY_SERVICE_URL || 'http://localhost:3001',
     public: {
-      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3001/api/v1/public'
+      apiBase: '/api/v1/public'
+    }
+  },
+
+  nitro: {
+    routeRules: {
+      '/api/v1/public/**': {
+        proxy: `${process.env.WARRANTY_SERVICE_URL || 'http://localhost:3001'}/api/v1/public/**`
+      }
     }
   },
 
@@ -38,5 +47,5 @@ export default defineNuxtConfig({
         { name: 'description', content: 'Cihaz garanti kayıt ve sorgulama sistemi' }
       ]
     }
-  }
+  },
 })
