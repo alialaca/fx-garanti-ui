@@ -26,6 +26,7 @@ export interface SessionResponse {
   expiresIn: number
 }
 
+// Public API - multipart/form-data olarak gönderilir
 export interface CreateWarrantyDto {
   serialNumber: string
   deviceModel?: string
@@ -34,11 +35,9 @@ export interface CreateWarrantyDto {
   identityNumber?: string
   email: string
   phone: string
-  invoiceImageUrl?: string
-  invoiceDate?: string
-  invoiceNumber?: string
-  warrantyStartDate: string
-  warrantyDurationMonths?: number
+  sourceReference?: string
+  // invoiceImage: File - form-data ile gönderilir (ZORUNLU)
+  // NOT: warrantyStartDate ve warrantyDurationMonths API tarafından otomatik ayarlanır
 }
 
 export interface WarrantyResponse {

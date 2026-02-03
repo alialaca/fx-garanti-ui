@@ -58,13 +58,13 @@ export const useWarrantyStore = defineStore('warranty', {
       }
     },
 
-    async createWarranty(data: CreateWarrantyDto) {
+    async createWarranty(data: CreateWarrantyDto, invoiceImage: File) {
       this.loading = true
       this.error = null
 
       try {
         const { createWarranty } = useApi()
-        this.currentWarranty = await createWarranty(data)
+        this.currentWarranty = await createWarranty(data, invoiceImage)
         return this.currentWarranty
       } catch (err: any) {
         this.error = err.response?.data?.message || 'Garanti kaydı oluşturulamadı'

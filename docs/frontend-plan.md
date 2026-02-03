@@ -64,25 +64,35 @@ Content-Type: application/json
 
 ### 3. Garanti Kaydı Oluştur
 
+> **Not:** Bu endpoint `multipart/form-data` formatı kullanır. Fatura görseli **zorunludur**.
+> Garanti süresi otomatik **24 ay**, başlangıç tarihi **bugün** olarak ayarlanır.
+
 ```http
 POST /warranties
 Authorization: Bearer <token>
-Content-Type: application/json
+Content-Type: multipart/form-data
 
-{
-  "serialNumber": "SN123456789",
-  "deviceModel": "iPhone 15 Pro",
-  "firstName": "Ali",
-  "lastName": "Yılmaz",
-  "identityNumber": "12345678901",  // opsiyonel, 11 hane
-  "email": "ali@example.com",
-  "phone": "5551234567",
-  "invoiceImageUrl": "https://...",  // opsiyonel
-  "invoiceDate": "2024-01-15",       // opsiyonel
-  "invoiceNumber": "INV-001",        // opsiyonel
-  "warrantyStartDate": "2024-01-15",
-  "warrantyDurationMonths": 24       // opsiyonel, default: 24
-}
+serialNumber: SN123456789
+deviceModel: iPhone 15 Pro           (opsiyonel)
+firstName: Ali
+lastName: Yılmaz
+identityNumber: 12345678901          (opsiyonel, 11 hane)
+email: ali@example.com
+phone: 5551234567
+sourceReference: ORD-123             (opsiyonel)
+invoiceImage: [FILE]                 (ZORUNLU - PNG, JPEG veya PDF, max 5MB)
+```
+
+**cURL Örneği:**
+```bash
+curl -X POST http://localhost:3000/api/v1/public/warranties \
+  -H "Authorization: Bearer <token>" \
+  -F "serialNumber=SN123456789" \
+  -F "firstName=Ali" \
+  -F "lastName=Yılmaz" \
+  -F "email=ali@example.com" \
+  -F "phone=5551234567" \
+  -F "invoiceImage=@/path/to/invoice.pdf"
 ```
 
 **Response (201):**
@@ -93,9 +103,16 @@ Content-Type: application/json
   "status": "active",
   "warrantyStartDate": "2024-01-15",
   "warrantyEndDate": "2026-01-15",
+  "warrantyDurationMonths": 24,
+  "invoiceImageUrl": "http://minio:9000/invoices/abc123.pdf",
   ...
 }
 ```
+
+**Hata Yanıtları:**
+- `400` - Fatura görseli eksik: `"Fatura görseli zorunludur"`
+- `400` - Geçersiz dosya tipi: `"Geçersiz dosya tipi. İzin verilen tipler: image/png, image/jpeg, application/pdf"`
+- `400` - Dosya çok büyük: `"Dosya boyutu çok büyük. Maksimum: 5 MB"`
 
 ### 4. Garanti Sorgula
 
@@ -157,7 +174,8 @@ interface SessionResponse {
   expiresIn: number;
 }
 
-interface CreateWarrantyDto {
+// Public API - multipart/form-data olarak gönderilir
+interface CreateWarrantyPublicDto {
   serialNumber: string;
   deviceModel?: string;
   firstName: string;
@@ -165,11 +183,9 @@ interface CreateWarrantyDto {
   identityNumber?: string;
   email: string;
   phone: string;
-  invoiceImageUrl?: string;
-  invoiceDate?: string;
-  invoiceNumber?: string;
-  warrantyStartDate: string;
-  warrantyDurationMonths?: number;
+  sourceReference?: string;
+  // invoiceImage: File - form-data ile gönderilir (ZORUNLU)
+  // NOT: warrantyStartDate ve warrantyDurationMonths API tarafından otomatik ayarlanır
 }
 
 interface WarrantyResponse {
@@ -195,3 +211,6 @@ interface WarrantyResponse {
 - Session token 15 dakika geçerli
 - `identityNumber` 11 haneli TC Kimlik numarası (sadece rakam)
 - Tarihler ISO 8601 formatında (`YYYY-MM-DD`)
+- **Garanti kaydı için fatura görseli zorunludur** (PNG, JPEG veya PDF, max 5MB)
+- Garanti süresi sabit **24 ay**, başlangıç tarihi otomatik **bugün** olarak ayarlanır
+- Garanti kaydı `multipart/form-data` formatında gönderilmelidir

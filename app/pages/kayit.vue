@@ -10,7 +10,7 @@ const loading = ref(false)
 const error = ref('')
 const verificationMethod = ref<IdentifierType>('phone')
 
-const form = reactive<Omit<CreateWarrantyDto, 'warrantyStartDate' | 'warrantyDurationMonths' | 'invoiceDate' | 'invoiceNumber'>>({
+const form = reactive<CreateWarrantyDto>({
   serialNumber: '',
   deviceModel: '',
   firstName: '',
@@ -18,7 +18,7 @@ const form = reactive<Omit<CreateWarrantyDto, 'warrantyStartDate' | 'warrantyDur
   identityNumber: '',
   email: '',
   phone: '',
-  invoiceImageUrl: ''
+  sourceReference: ''
 })
 
 const invoiceFile = ref<File | null>(null)
@@ -33,7 +33,8 @@ const isFormValid = computed(() => {
     form.firstName.trim() &&
     form.lastName.trim() &&
     form.email.trim() &&
-    form.phone.trim()
+    form.phone.trim() &&
+    invoiceFile.value !== null
   )
 })
 
@@ -44,9 +45,9 @@ const handleFileSelect = (event: Event) => {
   if (!file) return
 
   // Validate file type
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+  const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf']
   if (!allowedTypes.includes(file.type)) {
-    error.value = 'Sadece JPG, PNG, WebP veya PDF dosyaları yüklenebilir.'
+    error.value = 'Sadece JPG, PNG veya PDF dosyaları yüklenebilir.'
     return
   }
 
@@ -74,7 +75,6 @@ const handleFileSelect = (event: Event) => {
 const removeFile = () => {
   invoiceFile.value = null
   invoicePreview.value = null
-  form.invoiceImageUrl = ''
 }
 
 const handleFormSubmit = () => {
@@ -93,17 +93,13 @@ const handleAuthSuccess = async () => {
   error.value = ''
 
   try {
-    // TODO: Upload file to server and get URL
-    // For now, we'll skip file upload and just create the warranty
-    // In production, you would upload the file first:
-    // if (invoiceFile.value) {
-    //   const formData = new FormData()
-    //   formData.append('file', invoiceFile.value)
-    //   const uploadResponse = await uploadFile(formData)
-    //   form.invoiceImageUrl = uploadResponse.url
-    // }
+    if (!invoiceFile.value) {
+      error.value = 'Fatura görseli zorunludur.'
+      step.value = 'form'
+      return
+    }
 
-    const result = await warrantyStore.createWarranty(form as CreateWarrantyDto)
+    const result = await warrantyStore.createWarranty(form, invoiceFile.value)
     createdWarranty.value = result
     step.value = 'success'
   } catch (err: any) {
@@ -291,15 +287,15 @@ watch(() => form.phone, (val) => {
                   <svg class="w-5 h-5 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  Fatura
-                  <span class="text-gray-400 text-xs font-normal">(Opsiyonel)</span>
+                  Fatura Görseli
+                  <span class="text-red-500">*</span>
                 </h3>
 
                 <!-- File Upload Area -->
                 <div v-if="!invoiceFile" class="relative">
                   <input
                     type="file"
-                    accept="image/jpeg,image/png,image/webp,application/pdf"
+                    accept="image/jpeg,image/png,application/pdf"
                     class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     @change="handleFileSelect"
                   />
@@ -313,7 +309,7 @@ watch(() => form.phone, (val) => {
                       <span class="font-medium text-primary-600 dark:text-primary-400">Dosya seçin</span> veya sürükleyip bırakın
                     </p>
                     <p class="text-xs text-gray-500 dark:text-gray-500">
-                      JPG, PNG, WebP veya PDF (Maks. 5MB)
+                      JPG, PNG veya PDF (Maks. 5MB)
                     </p>
                   </div>
                 </div>
