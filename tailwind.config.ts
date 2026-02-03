@@ -42,7 +42,7 @@ export default {
       },
       fontFamily: {
         sans: ['DM Sans', 'system-ui', 'sans-serif'],
-        display: ['Instrument Serif', 'serif']
+        display: ['DM Sans', 'system-ui', 'sans-serif']
       }
     }
   },

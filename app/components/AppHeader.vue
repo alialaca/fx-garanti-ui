@@ -25,8 +25,8 @@ const isActive = (path: string) => {
               </svg>
             </div>
             <div class="hidden sm:block">
+              <span class="font-display text-xl text-primary dark:text-primary-400">Fx</span>
               <span class="font-display text-xl text-gray-900 dark:text-white">Garanti</span>
-              <span class="font-display text-xl text-primary dark:text-primary-400">Pro</span>
             </div>
           </NuxtLink>
 

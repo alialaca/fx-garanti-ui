@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,8 +9,6 @@
     --color-primary: #193F78;
     --color-primary-light: #F1F7FF;
     --color-accent: #2563EB;
-    --font-display: 'Instrument Serif', serif;
-    --font-body: 'DM Sans', sans-serif;
   }
 
   * {
@@ -23,16 +21,12 @@
 
   body {
     @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 antialiased;
-    font-family: var(--font-body);
+    font-family: 'DM Sans', system-ui, sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   ::selection {
     @apply bg-primary-500/20 text-primary-700 dark:bg-primary-400/30 dark:text-primary-200;
-  }
-
-  h1, h2, h3, .font-display {
-    font-family: var(--font-display);
   }
 }
 
