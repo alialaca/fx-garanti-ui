@@ -6,6 +6,7 @@ import type {
   SessionResponse,
   CreateWarrantyDto,
   WarrantyResponse,
+  WarrantyAuthInfo,
   ApiError
 } from '~/types'
 
@@ -85,11 +86,17 @@ export const useApi = () => {
     return response.data
   }
 
+  const getWarrantyAuthInfo = async (serialNumber: string): Promise<WarrantyAuthInfo> => {
+    const response = await client.get<WarrantyAuthInfo>(`/warranties/${serialNumber}/auth-info`)
+    return response.data
+  }
+
   return {
     client,
     requestOtp,
     verifyOtp,
     createWarranty,
-    getWarranty
+    getWarranty,
+    getWarrantyAuthInfo
   }
 }

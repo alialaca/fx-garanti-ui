@@ -2,23 +2,53 @@ export type IdentifierType = 'phone' | 'email'
 export type OtpPurpose = 'warranty_register' | 'warranty_query'
 export type WarrantyStatus = 'active' | 'expired' | 'voided' | 'out_of_warranty'
 
-export interface RequestOtpDto {
+// Cihazın kayıtlı iletişim bilgileri (maskelenmiş)
+export interface WarrantyAuthInfo {
+  serialNumber: string
+  maskedPhone: string | null
+  maskedEmail: string | null
+  hasPhone: boolean
+  hasEmail: boolean
+}
+
+// warranty_register için OTP talebi
+export interface RequestOtpForRegisterDto {
   identifier: string
   identifierType: IdentifierType
-  purpose: OtpPurpose
+  purpose: 'warranty_register'
 }
+
+// warranty_query için OTP talebi (serialNumber ile)
+export interface RequestOtpForQueryDto {
+  serialNumber: string
+  identifierType: IdentifierType
+  purpose: 'warranty_query'
+}
+
+export type RequestOtpDto = RequestOtpForRegisterDto | RequestOtpForQueryDto
 
 export interface OtpResponse {
   message: string
   expiresInMinutes: number
+  maskedIdentifier?: string // warranty_query için döner
 }
 
-export interface VerifyOtpDto {
+// warranty_register için OTP doğrulama
+export interface VerifyOtpForRegisterDto {
   identifier: string
   identifierType: IdentifierType
   otpCode: string
-  purpose: OtpPurpose
+  purpose: 'warranty_register'
 }
+
+// warranty_query için OTP doğrulama (serialNumber ile)
+export interface VerifyOtpForQueryDto {
+  serialNumber: string
+  otpCode: string
+  purpose: 'warranty_query'
+}
+
+export type VerifyOtpDto = VerifyOtpForRegisterDto | VerifyOtpForQueryDto
 
 export interface SessionResponse {
   accessToken: string

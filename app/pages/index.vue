@@ -1,25 +1,58 @@
 <script setup lang="ts">
+import type { WarrantyAuthInfo } from '~/types'
+
 const router = useRouter()
 const authStore = useAuthStore()
+const { getWarrantyAuthInfo } = useApi()
 
 const serialNumber = ref('')
 const showOtpModal = ref(false)
 const isSearching = ref(false)
+const searchError = ref('')
+const warrantyAuthInfo = ref<WarrantyAuthInfo | null>(null)
 
-const handleSearch = () => {
+const handleSearch = async () => {
   if (!serialNumber.value.trim()) return
-  showOtpModal.value = true
+
+  isSearching.value = true
+  searchError.value = ''
+  warrantyAuthInfo.value = null
+
+  try {
+    // Önce cihazın kayıtlı iletişim bilgilerini al
+    const authInfo = await getWarrantyAuthInfo(serialNumber.value.trim())
+    warrantyAuthInfo.value = authInfo
+    showOtpModal.value = true
+  } catch (err: any) {
+    if (err.response?.status === 404) {
+      searchError.value = 'Bu seri numarasina ait garanti kaydi bulunamadi.'
+    } else if (err.response?.status === 502 || err.response?.status === 503) {
+      searchError.value = 'Servis gecici olarak kullanilamiyor. Lutfen daha sonra tekrar deneyin.'
+    } else {
+      const message = err.response?.data?.message
+      searchError.value = (typeof message === 'string' && message.length < 100)
+        ? message
+        : 'Bir hata olustu. Lutfen tekrar deneyin.'
+    }
+  } finally {
+    isSearching.value = false
+  }
 }
 
 const handleOtpSuccess = async () => {
   showOtpModal.value = false
-  isSearching.value = true
+  warrantyAuthInfo.value = null
 
   try {
     await router.push(`/garanti/${serialNumber.value}`)
-  } finally {
-    isSearching.value = false
+  } catch {
+    // Navigation error handling
   }
+}
+
+const handleOtpCancel = () => {
+  showOtpModal.value = false
+  warrantyAuthInfo.value = null
 }
 
 const coverageItems = [
@@ -85,7 +118,7 @@ const exclusions = [
 
             <!-- Search Form -->
             <div class="animate-fade-in-up animate-delay-300">
-              <div class="card p-2 flex flex-col sm:flex-row gap-3">
+              <div class="card p-2 flex flex-col sm:flex-row gap-3" :class="{ 'ring-2 ring-red-500': searchError }">
                 <div class="flex-1 relative">
                   <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,9 +128,10 @@ const exclusions = [
                   <input
                     v-model="serialNumber"
                     type="text"
-                    placeholder="Seri numarası girin..."
+                    placeholder="Seri numarasi girin..."
                     class="w-full pl-12 pr-4 py-4 bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-0"
                     @keyup.enter="handleSearch"
+                    @input="searchError = ''"
                   />
                 </div>
                 <button
@@ -112,6 +146,10 @@ const exclusions = [
                   <span v-else>Garanti Sorgula</span>
                 </button>
               </div>
+              <!-- Error Message -->
+              <p v-if="searchError" class="mt-3 text-sm text-red-600 dark:text-red-400">
+                {{ searchError }}
+              </p>
             </div>
 
             <!-- Quick Stats -->
@@ -299,14 +337,14 @@ const exclusions = [
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showOtpModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div v-if="showOtpModal && warrantyAuthInfo" class="fixed inset-0 z-50 flex items-center justify-center p-4">
           <!-- Backdrop -->
-          <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="showOtpModal = false"></div>
+          <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="handleOtpCancel"></div>
 
           <!-- Modal -->
           <div class="relative card p-8 w-full max-w-md animate-fade-in-up">
             <button
-              @click="showOtpModal = false"
+              @click="handleOtpCancel"
               class="absolute top-4 right-4 p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 transition-colors"
             >
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -316,8 +354,10 @@ const exclusions = [
 
             <OtpVerification
               purpose="warranty_query"
+              :serial-number="serialNumber.trim()"
+              :auth-info="warrantyAuthInfo"
               @success="handleOtpSuccess"
-              @cancel="showOtpModal = false"
+              @cancel="handleOtpCancel"
             />
           </div>
         </div>

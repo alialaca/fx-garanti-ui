@@ -20,6 +20,8 @@ http://localhost:3000/api/v1/public
 
 ### 1. OTP İste
 
+#### Garanti Kayıt için (warranty_register)
+
 ```http
 POST /otp
 Content-Type: application/json
@@ -27,7 +29,22 @@ Content-Type: application/json
 {
   "identifier": "5551234567",
   "identifierType": "phone",      // "phone" | "email"
-  "purpose": "warranty_register"  // "warranty_register" | "warranty_query"
+  "purpose": "warranty_register"
+}
+```
+
+#### Garanti Sorgulama için (warranty_query)
+
+> **Güvenlik:** OTP, kullanıcının girdiği bilgiye değil, cihazın kayıtlı iletişim bilgisine gönderilir.
+
+```http
+POST /otp
+Content-Type: application/json
+
+{
+  "serialNumber": "SN123456789",
+  "identifierType": "phone",      // "phone" | "email" - kayıtlı bilgilerden hangisine gönderilsin
+  "purpose": "warranty_query"
 }
 ```
 
@@ -35,11 +52,14 @@ Content-Type: application/json
 ```json
 {
   "message": "OTP sent successfully",
+  "maskedIdentifier": "053****45",  // warranty_query için döner
   "expiresInMinutes": 5
 }
 ```
 
 ### 2. OTP Doğrula (Session Al)
+
+#### Garanti Kayıt için (warranty_register)
 
 ```http
 POST /sessions
@@ -50,6 +70,19 @@ Content-Type: application/json
   "identifierType": "phone",
   "otpCode": "123456",
   "purpose": "warranty_register"
+}
+```
+
+#### Garanti Sorgulama için (warranty_query)
+
+```http
+POST /sessions
+Content-Type: application/json
+
+{
+  "serialNumber": "SN123456789",
+  "otpCode": "123456",
+  "purpose": "warranty_query"
 }
 ```
 
@@ -114,7 +147,34 @@ curl -X POST http://localhost:3000/api/v1/public/warranties \
 - `400` - Geçersiz dosya tipi: `"Geçersiz dosya tipi. İzin verilen tipler: image/png, image/jpeg, application/pdf"`
 - `400` - Dosya çok büyük: `"Dosya boyutu çok büyük. Maksimum: 5 MB"`
 
-### 4. Garanti Sorgula
+### 4. Garanti Auth Bilgisi (Maskelenmiş)
+
+> **Not:** Bu endpoint public'tir ve OTP akışı başlamadan önce çağrılır.
+
+```http
+GET /warranties/:serialNumber/auth-info
+```
+
+**Response (200):**
+```json
+{
+  "serialNumber": "SN123456789",
+  "maskedPhone": "053****45",
+  "maskedEmail": "al***@example.com",
+  "hasPhone": true,
+  "hasEmail": true
+}
+```
+
+**Response (404):**
+```json
+{
+  "statusCode": 404,
+  "message": "Garanti kaydı bulunamadı"
+}
+```
+
+### 5. Garanti Sorgula
 
 ```http
 GET /warranties/:serialNumber
@@ -155,18 +215,53 @@ type IdentifierType = 'phone' | 'email';
 type OtpPurpose = 'warranty_register' | 'warranty_query';
 type WarrantyStatus = 'active' | 'expired' | 'voided' | 'out_of_warranty';
 
-interface RequestOtpDto {
-  identifier: string;
-  identifierType: IdentifierType;
-  purpose: OtpPurpose;
+// Garanti auth bilgisi (maskelenmiş)
+interface WarrantyAuthInfo {
+  serialNumber: string;
+  maskedPhone: string | null;
+  maskedEmail: string | null;
+  hasPhone: boolean;
+  hasEmail: boolean;
 }
 
-interface VerifyOtpDto {
+// warranty_register için OTP talebi
+interface RequestOtpForRegisterDto {
+  identifier: string;
+  identifierType: IdentifierType;
+  purpose: 'warranty_register';
+}
+
+// warranty_query için OTP talebi (serialNumber ile)
+interface RequestOtpForQueryDto {
+  serialNumber: string;
+  identifierType: IdentifierType;
+  purpose: 'warranty_query';
+}
+
+type RequestOtpDto = RequestOtpForRegisterDto | RequestOtpForQueryDto;
+
+interface OtpResponse {
+  message: string;
+  expiresInMinutes: number;
+  maskedIdentifier?: string; // warranty_query için döner
+}
+
+// warranty_register için OTP doğrulama
+interface VerifyOtpForRegisterDto {
   identifier: string;
   identifierType: IdentifierType;
   otpCode: string;
-  purpose: OtpPurpose;
+  purpose: 'warranty_register';
 }
+
+// warranty_query için OTP doğrulama (serialNumber ile)
+interface VerifyOtpForQueryDto {
+  serialNumber: string;
+  otpCode: string;
+  purpose: 'warranty_query';
+}
+
+type VerifyOtpDto = VerifyOtpForRegisterDto | VerifyOtpForQueryDto;
 
 interface SessionResponse {
   accessToken: string;

@@ -8,6 +8,7 @@ interface AuthState {
   identifier: string | null
   identifierType: IdentifierType | null
   purpose: OtpPurpose | null
+  serialNumber: string | null // warranty_query için seri numarası
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -17,7 +18,8 @@ export const useAuthStore = defineStore('auth', {
     expiresAt: null,
     identifier: null,
     identifierType: null,
-    purpose: null
+    purpose: null,
+    serialNumber: null
   }),
 
   getters: {
@@ -33,10 +35,20 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
+    // warranty_register için OTP context
     setOtpContext(identifier: string, identifierType: IdentifierType, purpose: OtpPurpose) {
       this.identifier = identifier
       this.identifierType = identifierType
       this.purpose = purpose
+      this.serialNumber = null
+    },
+
+    // warranty_query için OTP context (serialNumber ile)
+    setOtpContextForQuery(serialNumber: string, identifierType: IdentifierType, maskedIdentifier: string) {
+      this.serialNumber = serialNumber
+      this.identifierType = identifierType
+      this.identifier = maskedIdentifier // Maskelenmiş bilgi (görüntüleme için)
+      this.purpose = 'warranty_query'
     },
 
     setSession(session: SessionResponse) {
@@ -52,6 +64,7 @@ export const useAuthStore = defineStore('auth', {
       this.identifier = null
       this.identifierType = null
       this.purpose = null
+      this.serialNumber = null
     }
   }
 })

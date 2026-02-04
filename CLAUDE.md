@@ -53,6 +53,9 @@ app/
 | POST | `/sessions` | OTP doğrula, token al |
 | POST | `/warranties` | Garanti kaydı oluştur |
 | GET | `/warranties/:serialNumber` | Garanti sorgula |
+| GET | `/warranties/:serialNumber/auth-info` | Maskelenmiş iletişim bilgileri |
+
+> **Not:** Garanti sorgulama için güvenli OTP akışı kullanılır. Detaylar için `docs/secure-warranty-query-api.md` dosyasına bakın.
 
 ## Tema
 
