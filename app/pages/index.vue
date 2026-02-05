@@ -82,11 +82,11 @@ const exclusions = [
   { icon: 'user', text: 'Ürünün yanlış kullanımından kaynaklı kullanıcı hatası sonucu oluşan hasarlar' },
   { icon: 'wrench', text: 'Ürünün tamirinin yetkili olmayan servisler tarafından yapılması' },
   { icon: 'cog', text: 'Üründe yetkisiz kişilerce yapılan modifikasyonlar ve değişiklikler' },
-  { icon: 'cloud', text: 'Doğal afetler, yangın veya su baskını gibi dış faktörlerden kaynaklanan hasarlar' },
-  { icon: 'clock', text: 'Ürünün fazla kullanımından kaynaklı piston ve benzeri parçalarında oluşacak aşınma ve eskime' },
   { icon: 'nail', text: 'FixPro markası dışında başka marka çivi kullanmak' },
   { icon: 'flame', text: 'FixPro markası dışında başka marka gaz kullanmak' },
-  { icon: 'plug', text: 'Kendisine ait şarj aleti dışında başka bir şarj aleti ile şarj etmeye çalışmak' }
+  { icon: 'plug', text: 'Kendisine ait şarj aleti dışında başka bir şarj aleti ile şarj etmeye çalışmak' },
+  { icon: 'clock', text: 'Ürünün fazla kullanımından kaynaklı piston ve benzeri parçalarında oluşacak aşınma ve eskime' },
+  { icon: 'cloud', text: 'Doğal afetler, yangın veya su baskını gibi dış faktörlerden kaynaklanan hasarlar' }
 ]
 </script>
 
@@ -193,11 +193,11 @@ const exclusions = [
                 <div class="space-y-4">
                   <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-800">
                     <span class="text-gray-500 dark:text-gray-400">Cihaz</span>
-                    <span class="font-medium text-gray-900 dark:text-white">iPhone 15 Pro</span>
+                    <span class="font-medium text-gray-900 dark:text-white">FX165</span>
                   </div>
                   <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-800">
                     <span class="text-gray-500 dark:text-gray-400">Bitiş Tarihi</span>
-                    <span class="font-medium text-gray-900 dark:text-white">15 Ocak 2026</span>
+                    <span class="font-medium text-gray-900 dark:text-white">15 Aralık 202</span>
                   </div>
                   <div class="flex justify-between items-center py-3">
                     <span class="text-gray-500 dark:text-gray-400">Kalan Süre</span>
@@ -263,18 +263,21 @@ const exclusions = [
           </div>
         </div>
 
-        <!-- Exclusions - Clean Informative Design -->
+        <!-- Exclusions -->
         <div class="mt-16">
           <!-- Section Header -->
-          <div class="flex items-center gap-3 mb-6">
-            <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-              <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
+          <div class="flex items-center gap-4 mb-6">
+            <div class="relative">
+              <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 dark:from-amber-500 dark:to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <div class="absolute inset-0 rounded-2xl bg-amber-400 animate-ping opacity-20"></div>
             </div>
             <div>
-              <h3 class="font-display text-xl text-gray-900 dark:text-white">Garanti Kosullari</h3>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Asagidaki durumlar kapsam disindadir</p>
+              <h3 class="font-display text-xl text-gray-900 dark:text-white">Kapsam Dışı Durumlar</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Asagidaki durumlar garanti kapsaminda değildir</p>
             </div>
           </div>
 
@@ -283,42 +286,42 @@ const exclusions = [
             <div
               v-for="exclusion in exclusions"
               :key="exclusion.text"
-              class="group flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors"
+              class="group flex items-center gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors"
             >
               <!-- Icon indicator -->
-              <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-red-50 dark:bg-red-950/50 flex items-center justify-center">
+              <span class="flex-shrink-0 w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 flex items-center justify-center">
                 <!-- User -->
-                <svg v-if="exclusion.icon === 'user'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-if="exclusion.icon === 'user'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
                 <!-- Wrench -->
-                <svg v-else-if="exclusion.icon === 'wrench'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'wrench'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
                 </svg>
                 <!-- Cog -->
-                <svg v-else-if="exclusion.icon === 'cog'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'cog'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <!-- Cloud -->
-                <svg v-else-if="exclusion.icon === 'cloud'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'cloud'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
                 </svg>
                 <!-- Clock -->
-                <svg v-else-if="exclusion.icon === 'clock'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'clock'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <!-- Nail -->
-                <svg v-else-if="exclusion.icon === 'nail'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'nail'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0015 0m-15 0a7.5 7.5 0 1115 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077l1.41-.513m14.095-5.13l1.41-.513M5.106 17.785l1.15-.964m11.49-9.642l1.149-.964M7.501 19.795l.75-1.3m7.5-12.99l.75-1.3m-6.063 16.658l.26-1.477m2.605-14.772l.26-1.477m0 17.726l-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205L12 12m6.894 5.785l-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864l-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
                 </svg>
                 <!-- Flame -->
-                <svg v-else-if="exclusion.icon === 'flame'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'flame'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z" />
                 </svg>
                 <!-- Plug -->
-                <svg v-else-if="exclusion.icon === 'plug'" class="w-4 h-4 text-red-500 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <svg v-else-if="exclusion.icon === 'plug'" class="w-4 h-4 text-amber-500 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 10.5h.375c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125H21M3.75 18h15A2.25 2.25 0 0021 15.75v-6a2.25 2.25 0 00-2.25-2.25h-15A2.25 2.25 0 001.5 9.75v6A2.25 2.25 0 003.75 18z" />
                 </svg>
               </span>
