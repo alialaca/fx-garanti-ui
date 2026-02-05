@@ -11,6 +11,7 @@ const error = ref('')
 const warranty = computed(() => warrantyStore.currentWarranty)
 const statusLabel = computed(() => warrantyStore.statusLabel)
 const daysRemaining = computed(() => warrantyStore.daysRemaining)
+const remainingFormatted = computed(() => warrantyStore.remainingFormatted)
 
 const statusConfig = computed(() => {
   if (!warranty.value) return { class: '', icon: '', color: '' }
@@ -180,9 +181,9 @@ onMounted(async () => {
                 </div>
               </div>
 
-              <div v-if="warranty.status === 'active' && daysRemaining" class="text-right">
-                <div class="text-4xl font-display text-gray-900 dark:text-white">{{ daysRemaining }}</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">gün kaldı</div>
+              <div v-if="warranty.status === 'active' && remainingFormatted" class="text-right">
+                <div class="text-2xl font-display text-emerald-600 dark:text-emerald-400">{{ remainingFormatted }}</div>
+                <div class="text-sm text-gray-500 dark:text-gray-400">kaldı</div>
               </div>
             </div>
 

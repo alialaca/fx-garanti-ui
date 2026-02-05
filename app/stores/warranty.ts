@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import dayjs from 'dayjs'
 import type { WarrantyResponse, CreateWarrantyDto } from '~/types'
 
 interface WarrantyState {
@@ -38,6 +39,26 @@ export const useWarrantyStore = defineStore('warranty', {
       const today = new Date()
       const diffTime = endDate.getTime() - today.getTime()
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    },
+
+    remainingFormatted(): string | null {
+      if (!this.currentWarranty) return null
+
+      const endDate = dayjs(this.currentWarranty.warrantyEndDate)
+      const today = dayjs()
+
+      if (endDate.isBefore(today)) return null
+
+      const years = endDate.diff(today, 'year')
+      const months = endDate.diff(today.add(years, 'year'), 'month')
+      const days = endDate.diff(today.add(years, 'year').add(months, 'month'), 'day')
+
+      const parts: string[] = []
+      if (years > 0) parts.push(`${years} yıl`)
+      if (months > 0) parts.push(`${months} ay`)
+      if (days > 0 || parts.length === 0) parts.push(`${days} gün`)
+
+      return parts.join(' ')
     }
   },
 
