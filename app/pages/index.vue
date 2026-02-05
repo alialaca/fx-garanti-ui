@@ -88,6 +88,24 @@ const exclusions = [
   { icon: 'clock', text: 'Ürünün fazla kullanımından kaynaklı piston ve benzeri parçalarında oluşacak aşınma ve eskime' },
   { icon: 'cloud', text: 'Doğal afetler, yangın veya su baskını gibi dış faktörlerden kaynaklanan hasarlar' }
 ]
+
+const valuePropositions = [
+  {
+    icon: 'clipboard-list',
+    title: 'Adım Adım Bilgilendirme',
+    subtitle: 'Her aşamada yanınızdayız'
+  },
+  {
+    icon: 'eye',
+    title: 'Şeffaf Süreç',
+    subtitle: 'Tüm süreci takip edin'
+  },
+  {
+    icon: 'heart',
+    title: 'Müşteri Odaklı',
+    subtitle: 'Sizi yalnız bırakmıyoruz'
+  }
+]
 </script>
 
 <template>
@@ -156,19 +174,32 @@ const exclusions = [
               </p>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="flex flex-wrap gap-8 pt-4 animate-fade-in-up animate-delay-400">
-              <div>
-                <div class="text-3xl font-display text-gray-900 dark:text-white">50K+</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Kayıtlı Cihaz</div>
-              </div>
-              <div>
-                <div class="text-3xl font-display text-gray-900 dark:text-white">24 Ay</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Garanti Süresi</div>
-              </div>
-              <div>
-                <div class="text-3xl font-display text-gray-900 dark:text-white">7/24</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400">Destek</div>
+            <!-- Value Propositions -->
+            <div class="flex flex-wrap gap-6 pt-4 animate-fade-in-up animate-delay-400">
+              <div
+                v-for="item in valuePropositions"
+                :key="item.title"
+                class="flex items-center gap-3"
+              >
+                <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                  <!-- ClipboardList Icon -->
+                  <svg v-if="item.icon === 'clipboard-list'" class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  </svg>
+                  <!-- Eye Icon -->
+                  <svg v-else-if="item.icon === 'eye'" class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <!-- Heart Icon -->
+                  <svg v-else-if="item.icon === 'heart'" class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                  </svg>
+                </div>
+                <div>
+                  <div class="font-semibold text-gray-900 dark:text-white">{{ item.title }}</div>
+                  <div class="text-sm text-gray-500 dark:text-gray-400">{{ item.subtitle }}</div>
+                </div>
               </div>
             </div>
           </div>
