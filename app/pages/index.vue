@@ -197,7 +197,7 @@ const exclusions = [
                   </div>
                   <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-800">
                     <span class="text-gray-500 dark:text-gray-400">Bitiş Tarihi</span>
-                    <span class="font-medium text-gray-900 dark:text-white">15 Aralık 202</span>
+                    <span class="font-medium text-gray-900 dark:text-white">15 Aralık 2025</span>
                   </div>
                   <div class="flex justify-between items-center py-3">
                     <span class="text-gray-500 dark:text-gray-400">Kalan Süre</span>
