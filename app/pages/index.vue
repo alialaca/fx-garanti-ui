@@ -62,27 +62,31 @@ const coverageItems = [
     description: 'Üretim kaynaklı tüm kusur ve arızalar garanti kapsamındadır.'
   },
   {
-    icon: 'cpu',
-    title: 'Donanım Arızaları',
-    description: 'Anakart, işlemci, bellek ve diğer donanım bileşeni arızaları.'
+    icon: 'cog',
+    title: 'Ateşleme Mekanizması',
+    description: 'Gaz veya hava ile çalışan ateşleme sistemi arızaları.'
+  },
+  {
+    icon: 'trigger',
+    title: 'Tetik ve Emniyet',
+    description: 'Tetik mekanizması ve emniyet kilit sistemi sorunları.'
   },
   {
     icon: 'battery',
-    title: 'Batarya Sorunları',
-    description: 'Normal kullanımda yaşanan batarya performans düşüşleri.'
-  },
-  {
-    icon: 'screen',
-    title: 'Ekran Kusurları',
-    description: 'Piksel hataları ve dokunmatik ekran arızaları.'
+    title: 'Şarj Sistemi',
+    description: 'Orijinal şarj aleti ve batarya performans sorunları.'
   }
 ]
 
 const exclusions = [
-  'Fiziksel hasar ve kırıklar',
-  'Sıvı teması sonucu oluşan arızalar',
-  'Yetkisiz teknik müdahale',
-  'Doğal afetler ve yangın hasarları'
+  'Ürünün yanlış kullanımından kaynaklı kullanıcı hatası sonucu oluşan hasarlar',
+  'Ürünün tamirinin yetkili olmayan servisler tarafından yapılması',
+  'Üründe yetkisiz kişilerce yapılan modifikasyonlar ve değişiklikler',
+  'Doğal afetler, yangın veya su baskını gibi dış faktörlerden kaynaklanan hasarlar',
+  'Ürünün fazla kullanımından kaynaklı piston ve benzeri parçalarında oluşacak aşınma ve eskime',
+  'FixPro markası dışında başka marka çivi kullanmak',
+  'FixPro markası dışında başka marka gaz kullanmak',
+  'Kendisine ait şarj aleti dışında başka bir şarj aleti ile şarj etmeye çalışmak'
 ]
 </script>
 
@@ -240,17 +244,18 @@ const exclusions = [
               <svg v-if="item.icon === 'shield'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <!-- CPU Icon -->
-              <svg v-else-if="item.icon === 'cpu'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              <!-- Cog Icon -->
+              <svg v-else-if="item.icon === 'cog'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <!-- Trigger Icon (hand pointer) -->
+              <svg v-else-if="item.icon === 'trigger'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
               </svg>
               <!-- Battery Icon -->
               <svg v-else-if="item.icon === 'battery'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8V6a2 2 0 00-2-2H9a2 2 0 00-2 2v2m10 0v10a2 2 0 01-2 2H9a2 2 0 01-2-2V8m10 0H7" />
-              </svg>
-              <!-- Screen Icon -->
-              <svg v-else-if="item.icon === 'screen'" class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <h3 class="font-display text-lg text-gray-900 dark:text-white mb-2">{{ item.title }}</h3>
