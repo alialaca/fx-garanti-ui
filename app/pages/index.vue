@@ -197,7 +197,7 @@ const exclusions = [
                   </div>
                   <div class="flex justify-between items-center py-3">
                     <span class="text-gray-500 dark:text-gray-400">Kalan Süre</span>
-                    <span class="font-medium text-emerald-600 dark:text-emerald-400">347 gün</span>
+                    <span class="font-medium text-emerald-600 dark:text-emerald-400">11 ay 25 gün</span>
                   </div>
                 </div>
               </div>
