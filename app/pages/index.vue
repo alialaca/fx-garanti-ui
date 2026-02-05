@@ -263,29 +263,43 @@ const exclusions = [
           </div>
         </div>
 
-        <!-- Exclusions -->
-        <div class="mt-16 card p-8">
-          <div class="flex flex-col lg:flex-row gap-8">
-            <div class="lg:w-1/3">
-              <div class="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
-                <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <h3 class="font-display text-xl text-gray-900 dark:text-white mb-2">Kapsam Dışı Durumlar</h3>
-              <p class="text-gray-600 dark:text-gray-400">Aşağıdaki durumlar garanti kapsamı dışındadır.</p>
+        <!-- Exclusions - Clean Informative Design -->
+        <div class="mt-16">
+          <!-- Section Header -->
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+              <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
             </div>
-            <div class="lg:w-2/3">
-              <ul class="grid sm:grid-cols-2 gap-4">
-                <li v-for="exclusion in exclusions" :key="exclusion" class="flex items-start gap-3">
-                  <svg class="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                  <span class="text-gray-700 dark:text-gray-300">{{ exclusion }}</span>
-                </li>
-              </ul>
+            <div>
+              <h3 class="font-display text-xl text-gray-900 dark:text-white">Garanti Kosullari</h3>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Asagidaki durumlar kapsam disindadir</p>
             </div>
           </div>
+
+          <!-- Items Grid -->
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div
+              v-for="(exclusion, index) in exclusions"
+              :key="exclusion"
+              class="group flex items-start gap-3 p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-colors"
+            >
+              <!-- Number indicator -->
+              <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:bg-primary-100 group-hover:text-primary-600 dark:group-hover:bg-primary-900/50 dark:group-hover:text-primary-400 transition-colors">
+                {{ index + 1 }}
+              </span>
+              <span class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{{ exclusion }}</span>
+            </div>
+          </div>
+
+          <!-- Footer note -->
+          <p class="mt-5 text-xs text-gray-400 dark:text-gray-500 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Detayli bilgi icin kullanim kilavuzuna basvurabilirsiniz.
+          </p>
         </div>
       </div>
     </section>
