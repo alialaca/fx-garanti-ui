@@ -24,6 +24,7 @@ export const useWarrantyStore = defineStore('warranty', {
       if (!this.currentWarranty) return ''
 
       const labels: Record<string, string> = {
+        pending: 'Değerlendirme Bekliyor',
         active: 'Aktif',
         expired: 'Süresi Dolmuş',
         voided: 'İptal Edilmiş',

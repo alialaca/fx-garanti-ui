@@ -184,7 +184,7 @@ watch(() => form.phone, (val) => {
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
                 :class="step === 'success'
-                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                  ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/30'
                   : 'bg-gray-100 text-gray-400 dark:bg-gray-800'"
               >
                 <svg v-if="step === 'success'" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -438,16 +438,16 @@ watch(() => form.phone, (val) => {
 
           <!-- Step 3: Success -->
           <div v-else-if="step === 'success'" class="card p-8 text-center">
-            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-              <svg class="w-10 h-10 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+              <svg class="w-10 h-10 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
 
-            <h2 class="text-2xl font-display text-gray-900 dark:text-white mb-2">Garanti Kaydı Oluşturuldu!</h2>
-            <p class="text-gray-500 dark:text-gray-400 mb-8">Cihazınız başarıyla garanti kapsamına alındı.</p>
+            <h2 class="text-2xl font-display text-gray-900 dark:text-white mb-2">Başvurunuz Alındı!</h2>
+            <p class="text-gray-500 dark:text-gray-400 mb-8">Başvurunuz başarıyla alınmıştır. Fatura bilgileriniz incelendikten sonra garanti kaydınız aktifleştirilecektir.</p>
 
-            <div v-if="createdWarranty" class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 mb-8 text-left">
+            <div v-if="createdWarranty" class="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-6 mb-6 text-left">
               <div class="grid gap-4">
                 <div class="flex justify-between">
                   <span class="text-gray-500 dark:text-gray-400">Seri Numarası</span>
@@ -458,24 +458,27 @@ watch(() => form.phone, (val) => {
                   <span class="font-medium text-gray-900 dark:text-white">{{ createdWarranty.deviceModel }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-500 dark:text-gray-400">Garanti Başlangıcı</span>
-                  <span class="font-medium text-gray-900 dark:text-white">{{ new Date(createdWarranty.warrantyStartDate).toLocaleDateString('tr-TR') }}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-gray-500 dark:text-gray-400">Garanti Bitişi</span>
-                  <span class="font-medium text-gray-900 dark:text-white">{{ new Date(createdWarranty.warrantyEndDate).toLocaleDateString('tr-TR') }}</span>
+                  <span class="text-gray-500 dark:text-gray-400">Durum</span>
+                  <span class="badge-pending">Değerlendirme Bekliyor</span>
                 </div>
               </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row gap-4">
-              <NuxtLink :to="`/garanti/${createdWarranty?.serialNumber}`" class="btn-primary flex-1">
-                Garanti Detaylarını Gör
-              </NuxtLink>
-              <NuxtLink to="/" class="btn-secondary flex-1">
-                Ana Sayfaya Dön
-              </NuxtLink>
+            <!-- Info Note -->
+            <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30 mb-8 text-left">
+              <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p class="text-sm text-amber-700 dark:text-amber-300">
+                  Değerlendirme süreci genellikle 2 iş günü içinde tamamlanır. Sonuç kayıtlı iletişim bilgilerinize bildirilecektir.
+                </p>
+              </div>
             </div>
+
+            <NuxtLink to="/" class="btn-primary w-full sm:w-auto">
+              Ana Sayfaya Dön
+            </NuxtLink>
           </div>
         </Transition>
       </div>

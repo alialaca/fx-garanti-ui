@@ -1,6 +1,6 @@
 export type IdentifierType = 'phone' | 'email'
 export type OtpPurpose = 'warranty_register' | 'warranty_query'
-export type WarrantyStatus = 'active' | 'expired' | 'voided' | 'out_of_warranty'
+export type WarrantyStatus = 'pending' | 'active' | 'expired' | 'voided' | 'out_of_warranty'
 
 // Cihazın kayıtlı iletişim bilgileri (maskelenmiş)
 export interface WarrantyAuthInfo {

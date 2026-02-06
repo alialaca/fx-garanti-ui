@@ -17,6 +17,11 @@ const statusConfig = computed(() => {
   if (!warranty.value) return { class: '', icon: '', color: '' }
 
   const configs: Record<string, { class: string; icon: string; color: string }> = {
+    pending: {
+      class: 'badge-pending',
+      icon: 'clock',
+      color: 'amber'
+    },
     active: {
       class: 'badge-active',
       icon: 'check-circle',
@@ -142,19 +147,30 @@ onMounted(async () => {
             <!-- Background Accent -->
             <div
               class="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl -z-10 opacity-20"
-              :class="warranty.status === 'active' ? 'bg-emerald-500' : 'bg-red-500'"
+              :class="{
+                'bg-amber-500': warranty.status === 'pending',
+                'bg-emerald-500': warranty.status === 'active',
+                'bg-red-500': warranty.status !== 'pending' && warranty.status !== 'active'
+              }"
             ></div>
 
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div class="flex items-start gap-4">
                 <div
                   class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
-                  :class="warranty.status === 'active'
-                    ? 'bg-emerald-100 dark:bg-emerald-900/30'
-                    : 'bg-red-100 dark:bg-red-900/30'"
+                  :class="{
+                    'bg-amber-100 dark:bg-amber-900/30': warranty.status === 'pending',
+                    'bg-emerald-100 dark:bg-emerald-900/30': warranty.status === 'active',
+                    'bg-red-100 dark:bg-red-900/30': warranty.status !== 'pending' && warranty.status !== 'active' && warranty.status !== 'voided',
+                    'bg-gray-100 dark:bg-gray-800': warranty.status === 'voided'
+                  }"
                 >
+                  <!-- Clock (Pending) -->
+                  <svg v-if="statusConfig.icon === 'clock'" class="w-8 h-8 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                   <!-- Check Circle -->
-                  <svg v-if="statusConfig.icon === 'check-circle'" class="w-8 h-8" :class="warranty.status === 'active' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg v-else-if="statusConfig.icon === 'check-circle'" class="w-8 h-8 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <!-- X Circle -->
@@ -172,6 +188,7 @@ onMounted(async () => {
                     <h1 class="text-2xl font-display text-gray-900 dark:text-white">Garanti Durumu</h1>
                     <span :class="statusConfig.class">
                       <span v-if="warranty.status === 'active'" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      <span v-else-if="warranty.status === 'pending'" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                       {{ statusLabel }}
                     </span>
                   </div>
@@ -270,7 +287,17 @@ onMounted(async () => {
               <h2 class="font-display text-lg text-gray-900 dark:text-white">Garanti Süresi</h2>
             </div>
 
-            <div class="grid sm:grid-cols-3 gap-6">
+            <template v-if="warranty.status === 'pending'">
+              <div class="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30">
+                <div class="flex items-center gap-3">
+                  <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p class="text-sm text-amber-700 dark:text-amber-300">Başvurunuz değerlendirme aşamasında. Garanti süresi bilgileri onay sonrası görüntülenecektir.</p>
+                </div>
+              </div>
+            </template>
+            <div v-else class="grid sm:grid-cols-3 gap-6">
               <div class="text-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50">
                 <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">Başlangıç</div>
                 <div class="font-display text-lg text-gray-900 dark:text-white">{{ formatDate(warranty.warrantyStartDate) }}</div>
@@ -287,7 +314,17 @@ onMounted(async () => {
           </div>
 
           <!-- Info Note -->
-          <div class="p-4 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800/30">
+          <div v-if="warranty.status === 'pending'" class="p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-sm text-amber-700 dark:text-amber-300">
+                Başvurunuz değerlendirme aşamasındadır. Değerlendirme süreci genellikle 2 iş günü içinde tamamlanır. Sonuç kayıtlı iletişim bilgilerinize bildirilecektir.
+              </p>
+            </div>
+          </div>
+          <div v-else class="p-4 rounded-xl bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800/30">
             <div class="flex items-start gap-3">
               <svg class="w-5 h-5 text-primary-600 dark:text-primary-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
