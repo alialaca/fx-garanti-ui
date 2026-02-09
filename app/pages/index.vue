@@ -399,17 +399,22 @@ const valuePropositions = [
     <!-- Footer -->
     <footer class="py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-200 dark:border-gray-800">
       <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary-600 flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-          </div>
-          <span class="font-display text-lg"><span class="text-primary dark:text-primary-400">Fx</span><span class="text-gray-900 dark:text-white">Garanti</span></span>
+        <div class="flex flex-col items-center sm:items-start gap-1">
+          <span class="font-display text-lg">
+            <span class="font-medium text-primary dark:text-primary-400">Fx</span><span class="font-bold text-primary dark:text-primary-400">Garanti</span>
+          </span>
+          <span class="text-xs text-gray-400 dark:text-gray-500">Bir <span class="font-semibold text-gray-500 dark:text-gray-400">FixPro</span> çözümüdür</span>
         </div>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          &copy; {{ new Date().getFullYear() }} FxGaranti. Tüm hakları saklıdır.
-        </p>
+        <div class="flex flex-col items-center sm:items-end gap-1">
+          <div class="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
+            <span class="font-medium text-primary dark:text-primary-400">FxGaranti</span>
+            <span class="text-gray-300 dark:text-gray-600">|</span>
+            <span class="font-medium text-gray-500 dark:text-gray-400">FxServis</span>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            &copy; {{ new Date().getFullYear() }} FixPro. Tüm hakları saklıdır.
+          </p>
+        </div>
       </div>
     </footer>
 
