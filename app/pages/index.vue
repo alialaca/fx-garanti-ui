@@ -397,21 +397,63 @@ const valuePropositions = [
     </section>
 
     <!-- Footer -->
-    <footer class="py-8 px-4 sm:px-6 lg:px-8 border-t border-gray-200 dark:border-gray-800">
-      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div class="flex flex-col items-center sm:items-start gap-1">
-          <span class="font-display text-lg">
-            <span class="font-medium text-primary dark:text-primary-400">Fx</span><span class="font-bold text-primary dark:text-primary-400">Garanti</span>
-          </span>
-          <span class="text-xs text-gray-400 dark:text-gray-500">Bir <span class="font-semibold text-gray-500 dark:text-gray-400">FixPro</span> çözümüdür</span>
-        </div>
-        <div class="flex flex-col items-center sm:items-end gap-1">
-          <div class="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500">
-            <span class="font-medium text-primary dark:text-primary-400">FxGaranti</span>
-            <span class="text-gray-300 dark:text-gray-600">|</span>
-            <span class="font-medium text-gray-500 dark:text-gray-400">FxServis</span>
+    <footer class="relative bg-gray-900 dark:bg-gray-950 overflow-hidden">
+      <!-- Subtle gradient overlay -->
+      <div class="absolute inset-0 bg-gradient-to-br from-primary-900/40 via-transparent to-primary-900/20 pointer-events-none"></div>
+      <!-- Subtle noise texture -->
+      <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"></div>
+
+      <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Main Footer Content -->
+        <div class="py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+          <!-- Brand Column -->
+          <div class="flex flex-col gap-3">
+            <span class="font-display text-xl">
+              <span class="font-medium text-blue-300">Fx</span><span class="font-bold text-white">Garanti</span>
+            </span>
+            <p class="text-sm text-gray-400 leading-relaxed max-w-xs">
+              FixPro cihazlarınız için garanti kayıt ve sorgulama platformu. Garantinizi kolayca yönetin.
+            </p>
           </div>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+
+          <!-- Ecosystem Column -->
+          <div class="flex flex-col gap-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500">Ekosistem</h4>
+            <div class="flex flex-col gap-2">
+              <span class="inline-flex items-center gap-2 text-sm text-blue-300 font-medium">
+                <span class="w-1 h-1 rounded-full bg-blue-400"></span>
+                FxGaranti
+              </span>
+              <a href="https://servis.fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                FxServis
+                <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Corporate Column -->
+          <div class="flex flex-col gap-3">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500">Kurumsal</h4>
+            <div class="flex flex-col gap-2">
+              <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+                fixpro.com.tr
+                <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="border-t border-white/[0.06] py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity">
+            <img src="/logo-white.png" alt="FixPro" class="h-7" />
+          </a>
+          <p class="text-xs text-gray-500">
             &copy; {{ new Date().getFullYear() }} FixPro. Tüm hakları saklıdır.
           </p>
         </div>
