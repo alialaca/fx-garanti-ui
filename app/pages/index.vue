@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import type { WarrantyAuthInfo } from '~/types'
+import dayjs from 'dayjs'
+import 'dayjs/locale/tr'
+
+const illustrationEndDate = computed(() =>
+  dayjs().add(11, 'month').add(25, 'day').locale('tr').format('D MMMM YYYY')
+)
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -228,7 +234,7 @@ const valuePropositions = [
                   </div>
                   <div class="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-800">
                     <span class="text-gray-500 dark:text-gray-400">Bitiş Tarihi</span>
-                    <span class="font-medium text-gray-900 dark:text-white">15 Aralık 2025</span>
+                    <span class="font-medium text-gray-900 dark:text-white">{{ illustrationEndDate }}</span>
                   </div>
                   <div class="flex justify-between items-center py-3">
                     <span class="text-gray-500 dark:text-gray-400">Kalan Süre</span>
