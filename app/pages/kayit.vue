@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CreateWarrantyDto, IdentifierType } from '~/types'
+import { DEVICE_MODELS } from '~/types'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -236,7 +237,10 @@ watch(() => form.phone, (val) => {
                   </div>
                   <div>
                     <label class="label">Cihaz Modeli</label>
-                    <input v-model="form.deviceModel" type="text" class="input" placeholder="iPhone 15 Pro" />
+                    <select v-model="form.deviceModel" class="input">
+                      <option value="" disabled>Cihaz modeli seçiniz</option>
+                      <option v-for="model in DEVICE_MODELS" :key="model" :value="model">{{ model }}</option>
+                    </select>
                   </div>
                 </div>
               </div>

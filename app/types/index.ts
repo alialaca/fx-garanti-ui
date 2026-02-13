@@ -1,3 +1,6 @@
+export const DEVICE_MODELS = ['FX165', 'FXP165', 'FXP100', 'FXUZN', 'P800', 'P40', 'P27', 'P700'] as const
+export type DeviceModel = typeof DEVICE_MODELS[number]
+
 export type IdentifierType = 'phone' | 'email'
 export type OtpPurpose = 'warranty_register' | 'warranty_query'
 export type WarrantyStatus = 'pending' | 'active' | 'expired' | 'voided' | 'out_of_warranty'
