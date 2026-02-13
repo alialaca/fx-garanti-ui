@@ -31,6 +31,7 @@ const createdWarranty = ref<any>(null)
 const isFormValid = computed(() => {
   return (
     form.serialNumber.trim() &&
+    form.deviceModel &&
     form.firstName.trim() &&
     form.lastName.trim() &&
     form.email.trim() &&
@@ -236,10 +237,10 @@ watch(() => form.phone, (val) => {
                     <input v-model="form.serialNumber" type="text" class="input" placeholder="SN123456789" />
                   </div>
                   <div>
-                    <label class="label">Cihaz Modeli</label>
-                    <select v-model="form.deviceModel" class="input">
+                    <label class="label">Cihaz Modeli <span class="text-red-500">*</span></label>
+                    <select v-model="form.deviceModel" class="input" :class="{ 'text-gray-400 dark:text-gray-500': !form.deviceModel }">
                       <option value="" disabled>Cihaz modeli seçiniz</option>
-                      <option v-for="model in DEVICE_MODELS" :key="model" :value="model">{{ model }}</option>
+                      <option v-for="model in DEVICE_MODELS" :key="model" :value="model" class="text-gray-900 dark:text-gray-100">{{ model }}</option>
                     </select>
                   </div>
                 </div>
