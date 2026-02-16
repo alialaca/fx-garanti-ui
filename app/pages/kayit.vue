@@ -249,7 +249,7 @@ watch(() => form.serialNumber, (val) => {
                   </div>
                   <div>
                     <label class="label">Seri Numarası <span class="text-red-500">*</span></label>
-                    <input v-model="form.serialNumber" type="text" class="input uppercase" placeholder="SN123456789" maxlength="20" />
+                    <input v-model="form.serialNumber" type="text" class="input uppercase placeholder:normal-case" placeholder="SN123456789" maxlength="20" />
                   </div>
                 </div>
               </div>

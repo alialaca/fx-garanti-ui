@@ -12,6 +12,14 @@ const authStore = useAuthStore()
 const { getWarrantyAuthInfo } = useApi()
 
 const serialNumber = ref('')
+
+const formatSerialNumber = (value: string) => {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20)
+}
+
+watch(serialNumber, (val) => {
+  serialNumber.value = formatSerialNumber(val || '')
+})
 const showOtpModal = ref(false)
 const isSearching = ref(false)
 const searchError = ref('')
@@ -157,7 +165,8 @@ const valuePropositions = [
                     v-model="serialNumber"
                     type="text"
                     placeholder="Seri numarasi girin..."
-                    class="w-full pl-12 pr-4 py-4 bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-0"
+                    class="w-full pl-12 pr-4 py-4 bg-transparent border-0 text-gray-900 dark:text-white placeholder-gray-400 placeholder:normal-case focus:outline-none focus:ring-0 uppercase"
+                    maxlength="20"
                     @keyup.enter="handleSearch"
                     @input="searchError = ''"
                   />
