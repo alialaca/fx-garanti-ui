@@ -30,13 +30,7 @@ export default defineNuxtConfig({
     }
   },
 
-  nitro: {
-    routeRules: {
-      '/api/v1/public/**': {
-        proxy: `${process.env.WARRANTY_SERVICE_URL || 'http://localhost:3001'}/api/v1/public/**`
-      }
-    }
-  },
+  nitro: {},
 
   app: {
     head: {
