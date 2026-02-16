@@ -120,6 +120,10 @@ const handleAuthCancel = () => {
   step.value = 'form'
 }
 
+const formatSerialNumber = (value: string) => {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20)
+}
+
 const formatTcKimlik = (value: string) => {
   return value.replace(/\D/g, '').slice(0, 11)
 }
@@ -134,6 +138,10 @@ watch(() => form.identityNumber, (val) => {
 
 watch(() => form.phone, (val) => {
   form.phone = formatPhone(val || '')
+})
+
+watch(() => form.serialNumber, (val) => {
+  form.serialNumber = formatSerialNumber(val || '')
 })
 </script>
 
@@ -233,15 +241,15 @@ watch(() => form.phone, (val) => {
 
                 <div class="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label class="label">Seri Numarası <span class="text-red-500">*</span></label>
-                    <input v-model="form.serialNumber" type="text" class="input" placeholder="SN123456789" />
-                  </div>
-                  <div>
                     <label class="label">Cihaz Modeli <span class="text-red-500">*</span></label>
                     <select v-model="form.deviceModel" class="input" :class="{ 'text-gray-400 dark:text-gray-500': !form.deviceModel }">
                       <option value="" disabled>Cihaz modeli seçiniz</option>
                       <option v-for="model in DEVICE_MODELS" :key="model" :value="model" class="text-gray-900 dark:text-gray-100">{{ model }}</option>
                     </select>
+                  </div>
+                  <div>
+                    <label class="label">Seri Numarası <span class="text-red-500">*</span></label>
+                    <input v-model="form.serialNumber" type="text" class="input uppercase" placeholder="SN123456789" maxlength="20" />
                   </div>
                 </div>
               </div>
