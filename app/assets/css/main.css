@@ -112,11 +112,11 @@
 
   /* Admin Table */
   .admin-th {
-    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-gray-900/80;
+    @apply px-2.5 sm:px-4 py-2.5 sm:py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-gray-900/80;
   }
 
   .admin-td {
-    @apply px-4 py-3.5;
+    @apply px-2.5 sm:px-4 py-3 sm:py-3.5;
   }
 
   /* Animated Background Pattern */

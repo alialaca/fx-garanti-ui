@@ -79,11 +79,11 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
     >
       <div
         v-if="open && warranty"
-        class="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white dark:bg-gray-950 shadow-2xl overflow-y-auto"
+        class="fixed inset-y-0 right-0 z-50 w-[calc(100%-3rem)] sm:w-full sm:max-w-xl bg-white dark:bg-gray-950 shadow-2xl overflow-y-auto"
       >
         <!-- Header -->
         <div class="sticky top-0 z-10 border-b border-gray-200/30 dark:border-gray-700/30">
-          <div class="glass px-6 py-4">
+          <div class="glass px-4 sm:px-6 py-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <span :class="statusClass[warranty.status]">{{ statusLabel[warranty.status] }}</span>
@@ -103,14 +103,14 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
           <div class="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
         </div>
 
-        <div class="p-6 space-y-6">
+        <div class="p-4 sm:p-6 space-y-6">
           <!-- Customer Info -->
           <section class="animate-fade-in-up">
             <div class="flex items-center gap-2 mb-4">
               <div class="w-1 h-4 rounded-full bg-primary-500"></div>
               <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Musteri Bilgileri</h4>
             </div>
-            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-3.5 sm:p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Ad Soyad</span>
                 <span class="text-sm font-medium text-gray-900 dark:text-white">{{ warranty.firstName }} {{ warranty.lastName }}</span>
@@ -136,7 +136,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
               <div class="w-1 h-4 rounded-full bg-accent"></div>
               <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Cihaz Bilgileri</h4>
             </div>
-            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-3.5 sm:p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Seri Numarasi</span>
                 <span class="text-sm font-mono font-medium text-gray-900 dark:text-white">{{ warranty.serialNumber }}</span>
@@ -158,7 +158,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
               <div class="w-1 h-4 rounded-full bg-emerald-500"></div>
               <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Garanti Bilgileri</h4>
             </div>
-            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-3.5 sm:p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Baslangic Tarihi</span>
                 <span class="text-sm text-gray-900 dark:text-white">{{ formatDate(warranty.warrantyStartDate) }}</span>

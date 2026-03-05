@@ -101,7 +101,7 @@ onMounted(() => fetchWarranties())
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up">
       <div class="flex items-center gap-3">
-        <h1 class="text-2xl font-display text-gray-900 dark:text-white">Garanti Yonetimi</h1>
+        <h1 class="text-xl sm:text-2xl font-display text-gray-900 dark:text-white">Garanti Yonetimi</h1>
         <span v-if="meta.total" class="badge bg-primary-100/80 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 shadow-sm">
           {{ meta.total }} kayit
         </span>

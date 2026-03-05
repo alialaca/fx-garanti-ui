@@ -47,7 +47,7 @@ const maskPhone = (phone: string) => {
         <thead>
           <tr class="border-b border-gray-200/80 dark:border-gray-800/80">
             <th class="admin-th first:rounded-tl-2xl">Seri No</th>
-            <th class="admin-th">Cihaz Modeli</th>
+            <th class="admin-th hidden sm:table-cell">Cihaz Modeli</th>
             <th class="admin-th">Musteri</th>
             <th class="admin-th hidden sm:table-cell">Telefon</th>
             <th class="admin-th">Durum</th>
@@ -58,7 +58,7 @@ const maskPhone = (phone: string) => {
 
         <tbody v-if="loading">
           <tr v-for="i in 5" :key="i" class="border-b border-gray-100 dark:border-gray-800/50">
-            <td v-for="j in 7" :key="j" class="admin-td" :class="{ 'hidden sm:table-cell': j === 4, 'hidden md:table-cell': j === 6 }">
+            <td v-for="j in 7" :key="j" class="admin-td" :class="{ 'hidden sm:table-cell': j === 2 || j === 4, 'hidden md:table-cell': j === 6 }">
               <div
                 class="h-4 rounded-lg animate-pulse"
                 :class="j === 5 ? 'bg-primary-100/60 dark:bg-primary-900/20 w-20' : 'bg-gray-100 dark:bg-gray-800/60'"
@@ -94,16 +94,16 @@ const maskPhone = (phone: string) => {
             class="group border-b border-gray-100/80 dark:border-gray-800/40 hover:bg-primary-50/40 dark:hover:bg-primary-950/20 cursor-pointer transition-all duration-200"
             :style="{ animationDelay: `${index * 30}ms` }"
           >
-            <td class="admin-td font-mono text-sm font-medium text-gray-900 dark:text-white">
+            <td class="admin-td font-mono text-xs sm:text-sm font-medium text-gray-900 dark:text-white">
               {{ w.serialNumber }}
             </td>
-            <td class="admin-td text-gray-600 dark:text-gray-400">
+            <td class="admin-td hidden sm:table-cell text-gray-600 dark:text-gray-400">
               {{ w.deviceModel || '-' }}
             </td>
             <td class="admin-td text-gray-900 dark:text-white font-medium">
               {{ w.firstName }} {{ w.lastName }}
             </td>
-            <td class="admin-td hidden sm:table-cell text-gray-500 dark:text-gray-400 font-mono text-sm">
+            <td class="admin-td hidden sm:table-cell text-gray-500 dark:text-gray-400 font-mono text-xs sm:text-sm">
               {{ maskPhone(w.phone) }}
             </td>
             <td class="admin-td">

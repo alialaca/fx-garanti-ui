@@ -59,7 +59,7 @@ const handleLogin = async () => {
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
             </svg>
           </div>
-          <h1 class="text-2xl font-display text-gray-900 dark:text-white mb-1">
+          <h1 class="text-xl sm:text-2xl font-display text-gray-900 dark:text-white mb-1">
             <span class="gradient-text">FxGaranti</span> Kontrol Paneli
           </h1>
           <p class="text-sm text-gray-500 dark:text-gray-400">Yetkili giris</p>

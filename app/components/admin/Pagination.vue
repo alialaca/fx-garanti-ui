@@ -39,7 +39,7 @@ const perPageOptions = [10, 20, 50]
 <template>
   <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4">
     <!-- Info -->
-    <p class="text-sm text-gray-500 dark:text-gray-400">
+    <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center sm:text-left">
       <span class="font-medium text-gray-700 dark:text-gray-300">{{ from }}&ndash;{{ to }}</span>
       arasi, toplam
       <span class="font-medium text-gray-700 dark:text-gray-300">{{ meta.total }}</span>
@@ -61,7 +61,7 @@ const perPageOptions = [10, 20, 50]
         <button
           :disabled="meta.page <= 1"
           @click="emit('update:page', meta.page - 1)"
-          class="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+          class="p-2.5 sm:p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -73,7 +73,7 @@ const perPageOptions = [10, 20, 50]
           <button
             v-else
             @click="emit('update:page', p)"
-            class="w-9 h-9 rounded-lg text-sm font-medium transition-all duration-200"
+            class="w-10 h-10 sm:w-9 sm:h-9 rounded-lg text-sm font-medium transition-all duration-200"
             :class="p === meta.page
               ? 'bg-primary text-white shadow-md shadow-primary/25 dark:bg-primary-600'
               : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800'"
@@ -85,7 +85,7 @@ const perPageOptions = [10, 20, 50]
         <button
           :disabled="meta.page >= meta.total_pages"
           @click="emit('update:page', meta.page + 1)"
-          class="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
+          class="p-2.5 sm:p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-200"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />

@@ -60,7 +60,7 @@ const loadImage = async () => {
           :src="imageUrl"
           alt="Fatura gorseli"
           class="w-full transition-transform duration-300"
-          :class="zoomed ? 'scale-150' : 'scale-100'"
+          :class="zoomed ? 'scale-125 sm:scale-150 origin-top' : 'scale-100'"
         />
       </div>
       <p class="mt-1 text-xs text-gray-400 text-center">Buyutmek icin tiklayiniz</p>
