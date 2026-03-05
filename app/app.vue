@@ -7,7 +7,7 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen gradient-mesh pattern-grid">
+  <NuxtLayout>
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>

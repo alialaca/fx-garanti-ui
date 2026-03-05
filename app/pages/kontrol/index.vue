@@ -97,19 +97,19 @@ onMounted(() => fetchWarranties())
 </script>
 
 <template>
-  <div class="space-y-6 animate-fade-in-up">
+  <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up">
       <div class="flex items-center gap-3">
         <h1 class="text-2xl font-display text-gray-900 dark:text-white">Garanti Yonetimi</h1>
-        <span v-if="meta.total" class="badge bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
+        <span v-if="meta.total" class="badge bg-primary-100/80 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 shadow-sm">
           {{ meta.total }} kayit
         </span>
       </div>
 
       <!-- Search -->
       <div class="relative w-full sm:w-72">
-        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
@@ -124,23 +124,28 @@ onMounted(() => fetchWarranties())
     </div>
 
     <!-- Status Filter -->
-    <AdminStatusFilter v-model="statusFilter" :tabs="statusTabs" />
+    <div class="animate-fade-in-up animate-delay-100">
+      <AdminStatusFilter v-model="statusFilter" :tabs="statusTabs" />
+    </div>
 
     <!-- Table -->
-    <AdminWarrantyTable
-      :warranties="warranties"
-      :loading="loading"
-      @select="handleSelectWarranty"
-    />
+    <div class="animate-fade-in-up animate-delay-200">
+      <AdminWarrantyTable
+        :warranties="warranties"
+        :loading="loading"
+        @select="handleSelectWarranty"
+      />
+    </div>
 
     <!-- Pagination -->
-    <AdminPagination
-      v-if="meta.total_pages > 1"
-      :meta="meta"
-      :per-page="perPage"
-      @update:page="handlePageChange"
-      @update:per-page="perPage = $event"
-    />
+    <div v-if="meta.total_pages > 1" class="animate-fade-in-up animate-delay-300">
+      <AdminPagination
+        :meta="meta"
+        :per-page="perPage"
+        @update:page="handlePageChange"
+        @update:per-page="perPage = $event"
+      />
+    </div>
 
     <!-- Detail Drawer -->
     <AdminWarrantyDetailDrawer

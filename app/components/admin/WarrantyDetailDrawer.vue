@@ -82,26 +82,35 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
         class="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white dark:bg-gray-950 shadow-2xl overflow-y-auto"
       >
         <!-- Header -->
-        <div class="sticky top-0 z-10 glass border-b border-gray-200/30 dark:border-gray-700/30 px-6 py-4 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <span :class="statusClass[warranty.status]">{{ statusLabel[warranty.status] }}</span>
-            <span class="font-mono text-sm font-medium text-gray-900 dark:text-white">{{ warranty.serialNumber }}</span>
+        <div class="sticky top-0 z-10 border-b border-gray-200/30 dark:border-gray-700/30">
+          <div class="glass px-6 py-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span :class="statusClass[warranty.status]">{{ statusLabel[warranty.status] }}</span>
+                <span class="font-mono text-sm font-medium text-gray-900 dark:text-white">{{ warranty.serialNumber }}</span>
+              </div>
+              <button
+                @click="emit('close')"
+                class="p-2 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 transition-all duration-200"
+              >
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button
-            @click="emit('close')"
-            class="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 dark:hover:text-gray-300 dark:hover:bg-gray-800 transition-colors"
-          >
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <!-- Accent line under header -->
+          <div class="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
         </div>
 
         <div class="p-6 space-y-6">
           <!-- Customer Info -->
-          <section>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Musteri Bilgileri</h4>
-            <div class="space-y-3">
+          <section class="animate-fade-in-up">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1 h-4 rounded-full bg-primary-500"></div>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Musteri Bilgileri</h4>
+            </div>
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Ad Soyad</span>
                 <span class="text-sm font-medium text-gray-900 dark:text-white">{{ warranty.firstName }} {{ warranty.lastName }}</span>
@@ -121,12 +130,13 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
             </div>
           </section>
 
-          <hr class="border-gray-200 dark:border-gray-800" />
-
           <!-- Device Info -->
-          <section>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Cihaz Bilgileri</h4>
-            <div class="space-y-3">
+          <section class="animate-fade-in-up animate-delay-100">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1 h-4 rounded-full bg-accent"></div>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Cihaz Bilgileri</h4>
+            </div>
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Seri Numarasi</span>
                 <span class="text-sm font-mono font-medium text-gray-900 dark:text-white">{{ warranty.serialNumber }}</span>
@@ -142,12 +152,13 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
             </div>
           </section>
 
-          <hr class="border-gray-200 dark:border-gray-800" />
-
           <!-- Warranty Dates -->
-          <section>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Garanti Bilgileri</h4>
-            <div class="space-y-3">
+          <section class="animate-fade-in-up animate-delay-200">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1 h-4 rounded-full bg-emerald-500"></div>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Garanti Bilgileri</h4>
+            </div>
+            <div class="space-y-3 bg-gray-50/50 dark:bg-gray-900/30 rounded-xl p-4 border border-gray-100/80 dark:border-gray-800/50">
               <div class="flex justify-between">
                 <span class="text-sm text-gray-500 dark:text-gray-400">Baslangic Tarihi</span>
                 <span class="text-sm text-gray-900 dark:text-white">{{ formatDate(warranty.warrantyStartDate) }}</span>
@@ -177,30 +188,33 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
 
           <!-- Void Reason -->
           <template v-if="warranty.voidReason">
-            <hr class="border-gray-200 dark:border-gray-800" />
-            <section>
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Red Sebebi</h4>
-              <p class="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-xl p-3">
+            <section class="animate-fade-in-up animate-delay-300">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-1 h-4 rounded-full bg-red-500"></div>
+                <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Red Sebebi</h4>
+              </div>
+              <p class="text-sm text-gray-700 dark:text-gray-300 bg-red-50/50 dark:bg-red-900/10 rounded-xl p-4 border border-red-100/80 dark:border-red-900/30">
                 {{ warranty.voidReason }}
               </p>
             </section>
           </template>
 
-          <hr class="border-gray-200 dark:border-gray-800" />
-
           <!-- Invoice Image -->
-          <section>
-            <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Fatura Gorseli</h4>
+          <section class="animate-fade-in-up animate-delay-300">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-1 h-4 rounded-full bg-amber-500"></div>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Fatura Gorseli</h4>
+            </div>
             <AdminInvoiceViewer :serial-number="warranty.serialNumber" />
           </section>
 
           <!-- Actions -->
           <template v-if="canTakeAction">
-            <hr class="border-gray-200 dark:border-gray-800" />
-            <section class="flex gap-3">
+            <div class="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-800 to-transparent"></div>
+            <section class="flex gap-3 animate-fade-in-up animate-delay-400">
               <button
                 @click="showApproveModal = true"
-                class="btn flex-1 bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-600/25 focus:ring-emerald-500"
+                class="btn flex-1 bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/30 hover:-translate-y-0.5 focus:ring-emerald-500 transition-all duration-300"
               >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
@@ -209,7 +223,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
               </button>
               <button
                 @click="showRejectModal = true"
-                class="btn flex-1 bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/25 focus:ring-red-500"
+                class="btn flex-1 bg-red-600 text-white hover:bg-red-700 shadow-lg shadow-red-600/25 hover:shadow-xl hover:shadow-red-600/30 hover:-translate-y-0.5 focus:ring-red-500 transition-all duration-300"
               >
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
