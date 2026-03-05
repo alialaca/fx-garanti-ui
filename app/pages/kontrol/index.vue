@@ -124,17 +124,17 @@ onMounted(() => fetchWarranties())
     </div>
 
     <!-- Status Filter -->
-    <StatusFilter v-model="statusFilter" :tabs="statusTabs" />
+    <AdminStatusFilter v-model="statusFilter" :tabs="statusTabs" />
 
     <!-- Table -->
-    <WarrantyTable
+    <AdminWarrantyTable
       :warranties="warranties"
       :loading="loading"
       @select="handleSelectWarranty"
     />
 
     <!-- Pagination -->
-    <Pagination
+    <AdminPagination
       v-if="meta.total_pages > 1"
       :meta="meta"
       :per-page="perPage"
@@ -143,7 +143,7 @@ onMounted(() => fetchWarranties())
     />
 
     <!-- Detail Drawer -->
-    <WarrantyDetailDrawer
+    <AdminWarrantyDetailDrawer
       :warranty="selectedWarranty"
       :open="showDrawer"
       @close="handleDrawerClose"

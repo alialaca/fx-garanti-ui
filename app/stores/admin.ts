@@ -18,7 +18,7 @@ export const useAdminStore = defineStore('admin', {
     },
 
     isAdmin(): boolean {
-      return this.admin?.role === 'ADMIN'
+      return this.admin?.role?.toLowerCase() === 'admin'
     },
 
     displayName(): string {

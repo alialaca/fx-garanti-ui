@@ -191,7 +191,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
           <!-- Invoice Image -->
           <section>
             <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-3">Fatura Gorseli</h4>
-            <InvoiceViewer :serial-number="warranty.serialNumber" />
+            <AdminInvoiceViewer :serial-number="warranty.serialNumber" />
           </section>
 
           <!-- Actions -->
@@ -221,7 +221,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
         </div>
 
         <!-- Modals -->
-        <ApproveModal
+        <AdminApproveModal
           v-if="warranty"
           :warranty="warranty"
           :open="showApproveModal"
@@ -229,7 +229,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
           @approved="handleApproved"
         />
 
-        <RejectModal
+        <AdminRejectModal
           v-if="warranty"
           :warranty="warranty"
           :open="showRejectModal"
