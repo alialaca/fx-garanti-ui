@@ -106,6 +106,19 @@
     @apply badge bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400;
   }
 
+  .badge-out-of-warranty {
+    @apply badge bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400;
+  }
+
+  /* Admin Table */
+  .admin-th {
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 bg-gray-50/80 dark:bg-gray-900/80;
+  }
+
+  .admin-td {
+    @apply px-4 py-3.5;
+  }
+
   /* Animated Background Pattern */
   .pattern-grid {
     background-image:
