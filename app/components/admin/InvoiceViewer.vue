@@ -5,14 +5,19 @@ const props = defineProps<{
 
 const { getInvoiceImage } = useAdminApi()
 
-const imageUrl = ref('')
+const invoiceUrl = ref('')
 const loading = ref(false)
 const error = ref('')
 const zoomed = ref(false)
 
-const loadImage = async () => {
-  if (imageUrl.value) {
-    zoomed.value = !zoomed.value
+const isPdf = computed(() => {
+  const pathWithoutQuery = invoiceUrl.value.split('?')[0]
+  return pathWithoutQuery.toLowerCase().endsWith('.pdf')
+})
+
+const loadInvoice = async () => {
+  if (invoiceUrl.value) {
+    if (!isPdf.value) zoomed.value = !zoomed.value
     return
   }
 
@@ -21,9 +26,9 @@ const loadImage = async () => {
 
   try {
     const result = await getInvoiceImage(props.serialNumber)
-    imageUrl.value = result.url
+    invoiceUrl.value = result.url
   } catch {
-    error.value = 'Fatura gorseli yuklenemedi.'
+    error.value = 'Fatura belgesi yuklenemedi.'
   } finally {
     loading.value = false
   }
@@ -33,8 +38,8 @@ const loadImage = async () => {
 <template>
   <div>
     <button
-      v-if="!imageUrl"
-      @click="loadImage"
+      v-if="!invoiceUrl"
+      @click="loadInvoice"
       :disabled="loading"
       class="btn-secondary w-full text-sm"
     >
@@ -50,15 +55,38 @@ const loadImage = async () => {
 
     <div v-if="error" class="mt-2 text-sm text-red-500 dark:text-red-400">{{ error }}</div>
 
-    <div v-if="imageUrl" class="mt-3">
+    <!-- PDF Viewer -->
+    <div v-if="invoiceUrl && isPdf" class="mt-3 space-y-2">
+      <div class="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+        <iframe
+          :src="invoiceUrl"
+          class="w-full h-[400px] sm:h-[500px] bg-gray-50 dark:bg-gray-900"
+          title="Fatura belgesi"
+        />
+      </div>
+      <a
+        :href="invoiceUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+        </svg>
+        Yeni sekmede ac
+      </a>
+    </div>
+
+    <!-- Image Viewer -->
+    <div v-if="invoiceUrl && !isPdf" class="mt-3">
       <div
         class="relative rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 cursor-zoom-in"
         :class="{ 'cursor-zoom-out': zoomed }"
         @click="zoomed = !zoomed"
       >
         <img
-          :src="imageUrl"
-          alt="Fatura gorseli"
+          :src="invoiceUrl"
+          alt="Fatura belgesi"
           class="w-full transition-transform duration-300"
           :class="zoomed ? 'scale-125 sm:scale-150 origin-top' : 'scale-100'"
         />

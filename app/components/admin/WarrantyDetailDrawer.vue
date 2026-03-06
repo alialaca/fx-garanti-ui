@@ -203,7 +203,7 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
           <section class="animate-fade-in-up animate-delay-300">
             <div class="flex items-center gap-2 mb-4">
               <div class="w-1 h-4 rounded-full bg-amber-500"></div>
-              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Fatura Gorseli</h4>
+              <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">Fatura Belgesi</h4>
             </div>
             <AdminInvoiceViewer :serial-number="warranty.serialNumber" />
           </section>
