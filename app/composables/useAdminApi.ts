@@ -60,10 +60,13 @@ export const useAdminApi = () => {
   }
 
   const searchWarranties = async (params: {
+    serial_numbers?: string[]
     phone?: string
-    email?: string
+    identity_number?: string
+    status?: string
     page?: number
     per_page?: number
+    sort?: string
   }): Promise<PaginatedWarrantyResponse> => {
     const response = await internalClient.get<PaginatedWarrantyResponse>('/warranties/search', { params })
     return response.data

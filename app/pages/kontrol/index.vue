@@ -13,10 +13,25 @@ const warranties = ref<AdminWarranty[]>([])
 const meta = ref<PaginationMeta>({ total: 0, page: 1, per_page: 20, total_pages: 0 })
 const loading = ref(true)
 const statusFilter = ref('')
+const searchType = ref<'serial' | 'phone' | 'identity'>('serial')
 const searchQuery = ref('')
 const perPage = ref(20)
 const selectedWarranty = ref<AdminWarranty | null>(null)
 const showDrawer = ref(false)
+
+const searchTypes = [
+  { key: 'serial' as const, label: 'Seri No' },
+  { key: 'phone' as const, label: 'Telefon' },
+  { key: 'identity' as const, label: 'TC Kimlik' }
+]
+
+const searchPlaceholder = computed(() => {
+  switch (searchType.value) {
+    case 'serial': return 'Seri numarasi ile ara...'
+    case 'phone': return 'Telefon numarasi ile ara...'
+    case 'identity': return 'TC Kimlik numarasi ile ara...'
+  }
+})
 
 const statusTabs = computed(() => [
   { key: '', label: 'Tumu', count: undefined },
@@ -31,12 +46,25 @@ const fetchWarranties = async (page = 1) => {
   try {
     let result
     if (searchQuery.value.trim()) {
-      const params: Record<string, any> = { page, per_page: perPage.value }
-      if (searchQuery.value.includes('@')) {
-        params.email = searchQuery.value.trim()
-      } else {
-        params.phone = searchQuery.value.trim()
+      const q = searchQuery.value.trim()
+      const params: Record<string, any> = { page, per_page: perPage.value, sort: '-createdAt' }
+
+      switch (searchType.value) {
+        case 'serial':
+          params.serial_numbers = [q]
+          break
+        case 'phone':
+          params.phone = q
+          break
+        case 'identity':
+          params.identity_number = q
+          break
       }
+
+      if (statusFilter.value) {
+        params.status = statusFilter.value
+      }
+
       result = await searchWarranties(params)
     } else {
       result = await getWarranties({
@@ -59,6 +87,12 @@ const fetchWarranties = async (page = 1) => {
 watch(statusFilter, () => {
   searchQuery.value = ''
   fetchWarranties(1)
+})
+
+watch(searchType, () => {
+  if (searchQuery.value.trim()) {
+    fetchWarranties(1)
+  }
 })
 
 watch(perPage, () => fetchWarranties(1))
@@ -108,18 +142,33 @@ onMounted(() => fetchWarranties())
       </div>
 
       <!-- Search -->
-      <div class="relative w-full sm:w-72">
-        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+      <div class="flex w-full sm:w-auto gap-2">
+        <div class="flex rounded-lg border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-sm overflow-hidden">
+          <button
+            v-for="st in searchTypes"
+            :key="st.key"
+            @click="searchType = st.key; searchQuery = ''"
+            class="px-3 py-2 text-xs font-medium transition-all duration-200"
+            :class="searchType === st.key
+              ? 'bg-primary-600 text-white shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10'"
+          >
+            {{ st.label }}
+          </button>
         </div>
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Telefon veya e-posta ara..."
-          class="input pl-10 py-2.5 text-sm"
-        />
+        <div class="relative flex-1 sm:w-56">
+          <div class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            v-model="searchQuery"
+            type="text"
+            :placeholder="searchPlaceholder"
+            class="input pl-10 py-2.5 text-sm w-full"
+          />
+        </div>
       </div>
     </div>
 
