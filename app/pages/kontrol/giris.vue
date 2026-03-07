@@ -3,6 +3,9 @@ definePageMeta({
   layout: false
 })
 
+useHead({ title: 'Yönetici Girişi | FxGaranti' })
+useSeoMeta({ robots: 'noindex, nofollow' })
+
 const adminStore = useAdminStore()
 const router = useRouter()
 const { login } = useAdminApi()

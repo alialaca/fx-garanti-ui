@@ -2,6 +2,18 @@
 import type { CreateWarrantyDto, IdentifierType } from '~/types'
 import { DEVICE_MODELS } from '~/types'
 
+useHead({
+  title: 'Garanti Kaydı Oluştur | FxGaranti',
+  link: [{ rel: 'canonical', href: 'https://garanti.fixpro.com.tr/kayit' }]
+})
+useSeoMeta({
+  description: 'FixPro cihazınız için garanti kaydı oluşturun. Cihaz ve kişisel bilgilerinizi girerek garanti sürecinizi başlatın.',
+  ogTitle: 'Garanti Kaydı Oluştur | FxGaranti',
+  ogDescription: 'FixPro cihazınız için garanti kaydı oluşturun.',
+  ogType: 'website',
+  ogUrl: 'https://garanti.fixpro.com.tr/kayit',
+})
+
 const router = useRouter()
 const authStore = useAuthStore()
 const warrantyStore = useWarrantyStore()
@@ -159,6 +171,7 @@ watch(() => form.serialNumber, (val) => {
 
     <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div class="max-w-2xl mx-auto">
+        <h1 class="sr-only">Garanti Kaydı Oluştur</h1>
         <!-- Progress Steps -->
         <div class="mb-12">
           <div class="flex items-center justify-center gap-4">

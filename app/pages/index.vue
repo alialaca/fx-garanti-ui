@@ -7,6 +7,34 @@ const illustrationEndDate = computed(() =>
   dayjs().add(11, 'month').add(25, 'day').locale('tr').format('D MMMM YYYY')
 )
 
+useHead({
+  title: 'Garanti Sorgula ve Kaydet | FxGaranti',
+  link: [{ rel: 'canonical', href: 'https://garanti.fixpro.com.tr/' }]
+})
+useSeoMeta({
+  description: 'FixPro cihazınızın garanti durumunu anında sorgulayın veya yeni garanti kaydı oluşturun. Hızlı, güvenli ve kolay garanti yönetimi.',
+  ogTitle: 'FxGaranti - Cihaz Garanti Yönetim Sistemi',
+  ogDescription: 'FixPro cihazınızın garanti durumunu anında sorgulayın veya yeni garanti kaydı oluşturun.',
+  ogType: 'website',
+  ogUrl: 'https://garanti.fixpro.com.tr/',
+  twitterCard: 'summary',
+  twitterTitle: 'FxGaranti - Cihaz Garanti Yönetim Sistemi',
+  twitterDescription: 'FixPro cihazınızın garanti durumunu anında sorgulayın veya yeni garanti kaydı oluşturun.',
+})
+
+useHead({
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'FixPro',
+      url: 'https://fixpro.com.tr',
+      logo: 'https://garanti.fixpro.com.tr/logo.png',
+    })
+  }]
+})
+
 const router = useRouter()
 const authStore = useAuthStore()
 const { getWarrantyAuthInfo } = useApi()

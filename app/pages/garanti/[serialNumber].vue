@@ -1,4 +1,10 @@
 <script setup lang="ts">
+useHead({ title: 'Garanti Detayı | FxGaranti' })
+useSeoMeta({
+  description: 'Cihaz garanti durumu ve detay bilgileri.',
+  robots: 'noindex, nofollow',
+})
+
 const route = useRoute()
 const router = useRouter()
 const warrantyStore = useWarrantyStore()

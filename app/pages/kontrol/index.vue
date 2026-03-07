@@ -6,6 +6,9 @@ definePageMeta({
   middleware: 'admin'
 })
 
+useHead({ title: 'Garanti Yönetimi | FxGaranti' })
+useSeoMeta({ robots: 'noindex, nofollow' })
+
 const { getWarranties, searchWarranties } = useAdminApi()
 const adminStore = useAdminStore()
 const { trackEvent } = useTracking()
