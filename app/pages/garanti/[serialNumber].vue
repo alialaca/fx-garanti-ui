@@ -115,7 +115,7 @@ onMounted(async () => {
   <div class="min-h-screen">
     <AppHeader />
 
-    <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto">
         <!-- Back Button -->
         <NuxtLink to="/" class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-8 transition-colors">

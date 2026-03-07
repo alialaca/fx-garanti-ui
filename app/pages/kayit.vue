@@ -169,13 +169,13 @@ watch(() => form.serialNumber, (val) => {
   <div class="min-h-screen">
     <AppHeader />
 
-    <main class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+    <main id="main-content" class="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
       <div class="max-w-2xl mx-auto">
         <h1 class="sr-only">Garanti Kaydı Oluştur</h1>
         <!-- Progress Steps -->
         <div class="mb-12">
           <div class="flex items-center justify-center gap-4">
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" :aria-current="step === 'form' ? 'step' : undefined">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
                 :class="step === 'form'
@@ -190,9 +190,9 @@ watch(() => form.serialNumber, (val) => {
               <span class="text-sm font-medium hidden sm:inline" :class="step === 'form' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Bilgiler</span>
             </div>
 
-            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step !== 'form' }"></div>
+            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step !== 'form' }" aria-hidden="true"></div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" :aria-current="step === 'auth' ? 'step' : undefined">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
                 :class="step === 'auth'
@@ -209,9 +209,9 @@ watch(() => form.serialNumber, (val) => {
               <span class="text-sm font-medium hidden sm:inline" :class="step === 'auth' ? 'text-gray-900 dark:text-white' : 'text-gray-500'">Doğrulama</span>
             </div>
 
-            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step === 'success' }"></div>
+            <div class="w-12 h-0.5 bg-gray-200 dark:bg-gray-700" :class="{ 'bg-primary-500': step === 'success' }" aria-hidden="true"></div>
 
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2" :aria-current="step === 'success' ? 'step' : undefined">
               <div
                 class="w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all duration-300"
                 :class="step === 'success'
@@ -425,7 +425,7 @@ watch(() => form.serialNumber, (val) => {
               </div>
 
               <!-- Error Message -->
-              <div v-if="error" class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+              <div v-if="error" role="alert" class="p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                 <div class="flex items-start gap-3">
                   <svg class="w-5 h-5 text-red-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

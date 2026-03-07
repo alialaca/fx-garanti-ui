@@ -79,6 +79,9 @@ const canTakeAction = computed(() => adminStore.isAdmin && isPending.value)
     >
       <div
         v-if="open && warranty"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="`Garanti Detayı - ${warranty.serialNumber}`"
         class="fixed inset-y-0 right-0 z-50 w-[calc(100%-3rem)] sm:w-full sm:max-w-xl bg-white dark:bg-gray-950 shadow-2xl overflow-y-auto"
       >
         <!-- Header -->

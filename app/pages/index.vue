@@ -176,7 +176,7 @@ const valuePropositions = [
     <AppHeader />
 
     <!-- Hero Section -->
-    <section class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section id="main-content" class="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <!-- Decorative Elements -->
       <div class="absolute top-20 right-0 w-96 h-96 bg-primary-500/10 rounded-full blur-3xl -z-10"></div>
       <div class="absolute bottom-0 left-0 w-80 h-80 bg-accent/10 rounded-full blur-3xl -z-10"></div>
@@ -224,8 +224,9 @@ const valuePropositions = [
                   @click="handleSearch"
                   :disabled="!serialNumber.trim() || isSearching"
                   class="btn-primary px-8 whitespace-nowrap"
+                  :aria-label="isSearching ? 'Sorgulanıyor...' : 'Garanti Sorgula'"
                 >
-                  <svg v-if="isSearching" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <svg v-if="isSearching" class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" role="status" aria-label="Yükleniyor">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -233,7 +234,7 @@ const valuePropositions = [
                 </button>
               </div>
               <!-- Error Message -->
-              <p v-if="searchError" class="mt-3 text-sm text-red-600 dark:text-red-400">
+              <p v-if="searchError" role="alert" class="mt-3 text-sm text-red-600 dark:text-red-400">
                 {{ searchError }}
               </p>
             </div>
@@ -527,7 +528,7 @@ const valuePropositions = [
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showOtpModal && warrantyAuthInfo" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div v-if="showOtpModal && warrantyAuthInfo" class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="OTP Doğrulama">
           <!-- Backdrop -->
           <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" @click="handleOtpCancel"></div>
 
