@@ -1,10 +1,18 @@
 <script setup lang="ts">
-const { isDark, toggleTheme } = useTheme()
+const { isDark, toggleTheme, theme } = useTheme()
+const { trackEvent } = useTracking()
+
+const handleToggle = () => {
+  toggleTheme()
+  nextTick(() => {
+    trackEvent('theme-change', { theme: theme.value })
+  })
+}
 </script>
 
 <template>
   <button
-    @click="toggleTheme"
+    @click="handleToggle"
     class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
     :aria-label="isDark ? 'Açık temaya geç' : 'Koyu temaya geç'"
   >

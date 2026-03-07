@@ -3,6 +3,7 @@ const route = useRoute()
 const router = useRouter()
 const warrantyStore = useWarrantyStore()
 const authStore = useAuthStore()
+const { trackEvent } = useTracking()
 
 const serialNumber = computed(() => route.params.serialNumber as string)
 const loading = ref(true)
@@ -87,6 +88,9 @@ onMounted(async () => {
 
   try {
     await warrantyStore.fetchWarranty(serialNumber.value)
+    if (warrantyStore.currentWarranty) {
+      trackEvent('warranty-view', { status: warrantyStore.currentWarranty.status })
+    }
   } catch (err: any) {
     if (err.response?.status === 404) {
       error.value = 'Bu seri numarasına ait garanti kaydı bulunamadı.'

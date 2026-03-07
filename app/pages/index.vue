@@ -10,6 +10,7 @@ const illustrationEndDate = computed(() =>
 const router = useRouter()
 const authStore = useAuthStore()
 const { getWarrantyAuthInfo } = useApi()
+const { trackEvent } = useTracking()
 
 const serialNumber = ref('')
 
@@ -28,6 +29,7 @@ const warrantyAuthInfo = ref<WarrantyAuthInfo | null>(null)
 const handleSearch = async () => {
   if (!serialNumber.value.trim()) return
 
+  trackEvent('search', { type: 'serial' })
   isSearching.value = true
   searchError.value = ''
   warrantyAuthInfo.value = null
@@ -102,6 +104,25 @@ const exclusions = [
   { icon: 'clock', text: 'Ürünün fazla kullanımından kaynaklı piston ve benzeri parçalarında oluşacak aşınma ve eskime' },
   { icon: 'cloud', text: 'Doğal afetler, yangın veya su baskını gibi dış faktörlerden kaynaklanan hasarlar' }
 ]
+
+// Exclusions IntersectionObserver
+const exclusionsRef = ref<HTMLElement | null>(null)
+onMounted(() => {
+  if (!exclusionsRef.value) return
+  let tracked = false
+  const observer = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && !tracked) {
+      tracked = true
+      trackEvent('exclusions-view')
+      observer.disconnect()
+    }
+  }, { threshold: 0.3 })
+  observer.observe(exclusionsRef.value)
+})
+
+const handleFooterLinkClick = (url: string, label: string) => {
+  trackEvent('footer-link-click', { url, label })
+}
 
 const valuePropositions = [
   {
@@ -310,7 +331,7 @@ const valuePropositions = [
         </div>
 
         <!-- Exclusions -->
-        <div class="mt-16">
+        <div ref="exclusionsRef" class="mt-16">
           <!-- Section Header -->
           <div class="flex items-center gap-4 mb-6">
             <div class="relative">
@@ -438,14 +459,14 @@ const valuePropositions = [
                 <span class="w-1 h-1 rounded-full bg-blue-400"></span>
                 FxGaranti
               </span>
-              <a href="https://servis.fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+              <a href="https://servis.fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors" @click="handleFooterLinkClick('https://servis.fixpro.com.tr', 'FxServis')">
                 <span class="w-1 h-1 rounded-full bg-gray-600"></span>
                 FxServis
                 <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                 </svg>
               </a>
-              <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors">
+              <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white transition-colors" @click="handleFooterLinkClick('https://fixpro.com.tr', 'fixpro.com.tr')">
                 <span class="w-1 h-1 rounded-full bg-gray-600"></span>
                 fixpro.com.tr
                 <svg class="w-3 h-3 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -458,7 +479,7 @@ const valuePropositions = [
 
         <!-- Bottom Bar -->
         <div class="border-t border-white/[0.06] py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity">
+          <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity" @click="handleFooterLinkClick('https://fixpro.com.tr', 'FixPro Logo')">
             <img src="/logo-white.png" alt="FixPro" class="h-7" />
           </a>
           <p class="text-xs text-gray-500">

@@ -6,6 +6,7 @@ definePageMeta({
 const adminStore = useAdminStore()
 const router = useRouter()
 const { login } = useAdminApi()
+const { trackEvent } = useTracking()
 
 const username = ref('')
 const password = ref('')
@@ -28,15 +29,19 @@ const handleLogin = async () => {
 
   try {
     await login({ username: username.value.trim(), password: password.value })
+    trackEvent('admin-login-success')
     router.push('/kontrol')
   } catch (err: any) {
     const message = err.response?.data?.message
     if (err.response?.status === 401) {
       errorMessage.value = 'Kullanici adi veya sifre hatali.'
+      trackEvent('admin-login-fail', { reason: 'invalid_credentials' })
     } else if (typeof message === 'string' && message.length < 200) {
       errorMessage.value = message
+      trackEvent('admin-login-fail', { reason: 'server_error' })
     } else {
       errorMessage.value = 'Giris yapilamadi. Lutfen tekrar deneyin.'
+      trackEvent('admin-login-fail', { reason: 'server_error' })
     }
   } finally {
     isLoading.value = false

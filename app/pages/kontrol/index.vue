@@ -8,6 +8,7 @@ definePageMeta({
 
 const { getWarranties, searchWarranties } = useAdminApi()
 const adminStore = useAdminStore()
+const { trackEvent } = useTracking()
 
 const warranties = ref<AdminWarranty[]>([])
 const meta = ref<PaginationMeta>({ total: 0, page: 1, per_page: 20, total_pages: 0 })
@@ -84,7 +85,8 @@ const fetchWarranties = async (page = 1) => {
   }
 }
 
-watch(statusFilter, () => {
+watch(statusFilter, (val) => {
+  if (val) trackEvent('admin-filter', { status: val })
   searchQuery.value = ''
   fetchWarranties(1)
 })
@@ -104,7 +106,10 @@ watch(searchQuery, (val) => {
     fetchWarranties(1)
     return
   }
-  searchTimeout = setTimeout(() => fetchWarranties(1), 400)
+  searchTimeout = setTimeout(() => {
+    trackEvent('admin-search', { type: searchType.value })
+    fetchWarranties(1)
+  }, 400)
 })
 
 const handlePageChange = (page: number) => fetchWarranties(page)

@@ -28,15 +28,26 @@ app/
 │   └── OtpVerification.vue # OTP doğrulama komponenti
 ├── composables/
 │   ├── useApi.ts           # Axios wrapper, API metodları
-│   └── useTheme.ts         # Tema yönetimi
+│   ├── useAdminApi.ts      # Admin API metodları
+│   ├── useTheme.ts         # Tema yönetimi
+│   └── useTracking.ts      # Umami analytics event tracking
+├── plugins/
+│   └── umami.client.ts     # Umami script injection (client-only)
 ├── stores/
 │   ├── auth.ts             # Auth state, session yönetimi
+│   ├── admin.ts            # Admin auth state
 │   └── warranty.ts         # Garanti state
+├── layouts/
+│   ├── default.vue         # Default layout
+│   └── admin.vue           # Admin panel layout
 ├── pages/
 │   ├── index.vue           # Anasayfa - sorgulama + kapsam bilgileri
 │   ├── kayit.vue           # Garanti kayıt formu
-│   └── garanti/
-│       └── [serialNumber].vue  # Garanti detay sayfası
+│   ├── garanti/
+│   │   └── [serialNumber].vue  # Garanti detay sayfası
+│   └── kontrol/
+│       ├── giris.vue       # Admin giriş sayfası
+│       └── index.vue       # Admin garanti yönetim paneli
 └── types/index.ts          # TypeScript type definitions
 ```
 
@@ -66,3 +77,32 @@ Dark/Light/System tema desteği mevcut. Default: System preference.
 - **Primary:** #193F78
 - **Accent:** #2563EB
 - **Fonts:** Instrument Serif (display), DM Sans (body)
+
+## Analytics (Umami)
+
+Self-hosted Umami entegrasyonu. Tüm sayfalarda (public + admin) aktif.
+
+**Env değişkenleri** (`NUXT_PUBLIC_` prefix zorunlu):
+```
+NUXT_PUBLIC_UMAMI_SCRIPT_URL=https://analytics.example.com/script.js
+NUXT_PUBLIC_UMAMI_WEBSITE_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+**Mimari:** `umami.client.ts` plugin scripti inject eder → `useTracking.ts` composable type-safe `trackEvent()` sağlar.
+
+**İzlenen olaylar:**
+
+| Olay | Sayfa | Veri |
+|------|-------|------|
+| `search` | Anasayfa | `{ type: 'serial' }` |
+| `exclusions-view` | Anasayfa | IntersectionObserver, 1 kez |
+| `footer-link-click` | Anasayfa | `{ url, label }` |
+| `registration-start` | Kayıt | onMounted |
+| `registration-otp-request` | Kayıt | form submit |
+| `registration-complete` | Kayıt | `{ device_model }` |
+| `warranty-view` | Garanti detay | `{ status }` |
+| `theme-change` | ThemeToggle | `{ theme: 'dark'\|'light'\|'system' }` |
+| `admin-login-success` | Admin giriş | - |
+| `admin-login-fail` | Admin giriş | `{ reason: 'invalid_credentials'\|'server_error' }` |
+| `admin-search` | Admin panel | `{ type: 'serial'\|'phone'\|'identity' }` |
+| `admin-filter` | Admin panel | `{ status }` |

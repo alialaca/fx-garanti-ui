@@ -5,6 +5,7 @@ import { DEVICE_MODELS } from '~/types'
 const router = useRouter()
 const authStore = useAuthStore()
 const warrantyStore = useWarrantyStore()
+const { trackEvent } = useTracking()
 
 const step = ref<'form' | 'auth' | 'success'>('form')
 const loading = ref(false)
@@ -83,6 +84,8 @@ const handleFormSubmit = () => {
   if (!isFormValid.value) return
   error.value = ''
 
+  trackEvent('registration-otp-request')
+
   // OTP doğrulama için identifier'ı ayarla
   const identifier = verificationMethod.value === 'phone' ? form.phone : form.email
   authStore.setOtpContext(identifier, verificationMethod.value, 'warranty_register')
@@ -103,6 +106,7 @@ const handleAuthSuccess = async () => {
 
     const result = await warrantyStore.createWarranty(form, invoiceFile.value)
     createdWarranty.value = result
+    trackEvent('registration-complete', { device_model: form.deviceModel })
     step.value = 'success'
   } catch (err: any) {
     if (err.response?.status === 409) {
@@ -131,6 +135,10 @@ const formatTcKimlik = (value: string) => {
 const formatPhone = (value: string) => {
   return value.replace(/\D/g, '').slice(0, 10)
 }
+
+onMounted(() => {
+  trackEvent('registration-start')
+})
 
 watch(() => form.identityNumber, (val) => {
   form.identityNumber = formatTcKimlik(val || '')

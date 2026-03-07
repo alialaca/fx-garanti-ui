@@ -26,7 +26,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     warrantyServiceUrl: process.env.WARRANTY_SERVICE_URL || 'http://localhost:3001',
     public: {
-      apiBase: '/api/v1/public'
+      apiBase: '/api/v1/public',
+      umamiScriptUrl: '',
+      umamiWebsiteId: '',
     }
   },
 
