@@ -480,7 +480,7 @@ const valuePropositions = [
         <!-- Bottom Bar -->
         <div class="border-t border-white/[0.06] py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <a href="https://fixpro.com.tr" target="_blank" rel="noopener noreferrer" class="opacity-70 hover:opacity-100 transition-opacity" @click="handleFooterLinkClick('https://fixpro.com.tr', 'FixPro Logo')">
-            <img src="/logo-white.png" alt="FixPro" class="h-7" />
+            <img src="/logo-white.png" alt="FixPro" class="h-7" width="148" height="40" />
           </a>
           <p class="text-xs text-gray-500">
             &copy; {{ new Date().getFullYear() }} FixPro. Tüm hakları saklıdır.

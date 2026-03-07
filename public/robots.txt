@@ -1,1 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /kontrol/
+Disallow: /api/
 
+Sitemap: https://garanti.fixpro.com.tr/sitemap.xml
