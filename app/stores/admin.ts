@@ -34,6 +34,7 @@ export const useAdminStore = defineStore('admin', {
       if (import.meta.client) {
         localStorage.setItem('admin_token', accessToken)
         localStorage.setItem('admin_user', JSON.stringify(admin))
+        localStorage.setItem('admin_token_ts', String(Date.now()))
       }
     },
 
@@ -44,6 +45,7 @@ export const useAdminStore = defineStore('admin', {
       if (import.meta.client) {
         localStorage.removeItem('admin_token')
         localStorage.removeItem('admin_user')
+        localStorage.removeItem('admin_token_ts')
       }
     },
 
@@ -52,8 +54,16 @@ export const useAdminStore = defineStore('admin', {
 
       const token = localStorage.getItem('admin_token')
       const userJson = localStorage.getItem('admin_user')
+      const tokenTs = localStorage.getItem('admin_token_ts')
 
       if (token && userJson) {
+        // Expire tokens after 24 hours
+        const MAX_AGE_MS = 24 * 60 * 60 * 1000
+        if (tokenTs && Date.now() - Number(tokenTs) > MAX_AGE_MS) {
+          this.logout()
+          return
+        }
+
         try {
           this.accessToken = token
           this.admin = JSON.parse(userJson)
