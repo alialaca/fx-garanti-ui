@@ -16,7 +16,7 @@ const { trackEvent } = useTracking()
 const warranties = ref<AdminWarranty[]>([])
 const meta = ref<PaginationMeta>({ total: 0, page: 1, per_page: 20, total_pages: 0 })
 const loading = ref(true)
-const statusFilter = ref('')
+const statusFilter = ref('pending')
 const searchType = ref<'serial' | 'phone' | 'identity'>('serial')
 const searchQuery = ref('')
 const perPage = ref(20)
@@ -37,9 +37,21 @@ const searchPlaceholder = computed(() => {
   }
 })
 
+const headerSubtitle = computed(() => {
+  switch (statusFilter.value) {
+    case 'pending': return 'Onay bekleyen garanti kayitlari'
+    case 'active': return 'Aktif garanti kayitlari'
+    case 'expired': return 'Suresi dolmus garanti kayitlari'
+    case 'voided': return 'Iptal edilen garanti kayitlari'
+    default: return 'Tum garanti kayitlari'
+  }
+})
+
+const pendingCount = ref<number | undefined>(undefined)
+
 const statusTabs = computed(() => [
   { key: '', label: 'Tumu', count: undefined },
-  { key: 'pending', label: 'Bekleyen' },
+  { key: 'pending', label: 'Bekleyen', count: pendingCount.value },
   { key: 'active', label: 'Aktif' },
   { key: 'expired', label: 'Suresi Dolmus' },
   { key: 'voided', label: 'Iptal' }
@@ -80,6 +92,9 @@ const fetchWarranties = async (page = 1) => {
     }
     warranties.value = result.data
     meta.value = result.meta
+    if (statusFilter.value === 'pending' && !searchQuery.value.trim()) {
+      pendingCount.value = result.meta.total
+    }
   } catch {
     warranties.value = []
     meta.value = { total: 0, page: 1, per_page: perPage.value, total_pages: 0 }
@@ -142,11 +157,17 @@ onMounted(() => fetchWarranties())
   <div class="space-y-6">
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in-up">
-      <div class="flex items-center gap-3">
-        <h1 class="text-xl sm:text-2xl font-display text-gray-900 dark:text-white">Garanti Yonetimi</h1>
-        <span v-if="meta.total" class="badge bg-primary-100/80 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 shadow-sm">
-          {{ meta.total }} kayit
-        </span>
+      <div>
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl sm:text-2xl font-display text-gray-900 dark:text-white">Garanti Yonetimi</h1>
+          <span v-if="meta.total" class="badge bg-primary-100/80 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400 shadow-sm">
+            {{ meta.total }} kayit
+          </span>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-1">
+          <span v-if="statusFilter === 'pending'" class="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+          {{ headerSubtitle }}
+        </p>
       </div>
 
       <!-- Search -->

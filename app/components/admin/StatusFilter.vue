@@ -32,7 +32,9 @@ const emit = defineEmits<{
         class="px-1.5 py-0.5 rounded-md text-xs font-semibold min-w-[1.25rem] text-center transition-colors duration-300"
         :class="modelValue === tab.key
           ? 'bg-white/20 text-white'
-          : 'bg-gray-200/70 text-gray-500 dark:bg-gray-700/50 dark:text-gray-400'"
+          : tab.key === 'pending'
+            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400'
+            : 'bg-gray-200/70 text-gray-500 dark:bg-gray-700/50 dark:text-gray-400'"
       >
         {{ tab.count }}
       </span>
