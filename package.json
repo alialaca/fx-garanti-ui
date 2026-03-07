@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "deploy": "tar -zcvf deploy.tar .output Dockerfile && caprover deploy -n hetzner -a fx-garanti-ui -t deploy.tar && rm deploy.tar"
+    "deploy": "git archive -o deploy.tar HEAD && caprover deploy -n hetzner -a fx-garanti-ui -t deploy.tar && rm deploy.tar"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.9.0",

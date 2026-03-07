@@ -78,6 +78,18 @@ Dark/Light/System tema desteği mevcut. Default: System preference.
 - **Accent:** #2563EB
 - **Fonts:** Instrument Serif (display), DM Sans (body)
 
+## Deploy
+
+Multi-stage Docker build ile CapRover'a deploy edilir. Build production sunucuda yapılır.
+
+```bash
+pnpm deploy   # git archive → caprover deploy
+```
+
+**Akış:** `git archive HEAD` → commit'li dosyaları tar'lar → CapRover tar'ı alır → Dockerfile ile multi-stage build → production image
+
+**Dosyalar:** `Dockerfile` (multi-stage), `captain-definition`, `.dockerignore`
+
 ## Analytics (Umami)
 
 Self-hosted Umami entegrasyonu. Tüm sayfalarda (public + admin) aktif.
