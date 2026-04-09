@@ -5,7 +5,6 @@ const props = defineProps<{
   purpose: OtpPurpose
   serialNumber?: string           // warranty_query için
   authInfo?: WarrantyAuthInfo     // Maskelenmiş iletişim bilgileri
-  onSuccess?: () => void
 }>()
 
 const emit = defineEmits<{
@@ -163,7 +162,6 @@ const handleVerifyOtp = async () => {
     }
 
     emit('success')
-    props.onSuccess?.()
   } catch (err: any) {
     error.value = err.response?.data?.message || 'OTP doğrulanamadı. Lütfen tekrar deneyin.'
   } finally {
